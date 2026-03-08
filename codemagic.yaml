@@ -1,0 +1,67 @@
+workflows:
+  ios-app-store:
+    name: iOS App Store (No local Mac)
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+
+    environment:
+      flutter: stable
+      xcode: latest
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.okuhleit.checkandseeai
+      vars:
+        APP_STORE_APPLE_ID: ""
+      groups:
+        - app_store_credentials
+
+    scripts:
+      - name: Flutter pub get
+        script: |
+          flutter pub get
+
+      - name: Build signed IPA for App Store Connect
+        script: |
+          flutter build ipa --export-method app-store
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        submit_to_app_store: false
+
+  android-play-internal:
+    name: Android Play Internal
+    instance_type: linux_x2
+    max_build_duration: 60
+
+    environment:
+      flutter: stable
+      vars:
+        PACKAGE_NAME: com.okuhleit.checkandseeai
+      groups:
+        - google_play_credentials
+
+    scripts:
+      - name: Flutter pub get
+        script: |
+          flutter pub get
+
+      - name: Build Android App Bundle
+        script: |
+          flutter build appbundle --release
+
+    artifacts:
+      - build/app/outputs/bundle/release/app-release.aab
+
+    publishing:
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true

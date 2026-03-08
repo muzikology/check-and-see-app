@@ -1,0 +1,581 @@
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
+import '/scan_session.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui';
+import '/index.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'history_page_model.dart';
+export 'history_page_model.dart';
+
+/// Create a modern mobile app screen for viewing scan history.
+///
+/// App purpose:
+/// Display past product scans with dates and health scores.
+///
+/// Design style:
+/// Modern
+/// Minimal
+/// Premium
+/// Inspired by Apple Health
+///
+/// Layout:
+///
+/// Top App Bar
+/// Title: Scan History
+///
+/// Main section:
+/// List of past scans
+/// Each item shows:
+/// - Product name
+/// - Scan date
+/// - Health score badge
+/// - Thumbnail image
+///
+/// Empty state:
+/// Icon and text: "No scans yet"
+/// Subtitle: "Start scanning products to see your history"
+///
+/// Colors:
+/// Primary: Deep green #1B5E20
+/// Background: #F5F7F5
+///
+/// Use rounded cards and soft shadows.
+class HistoryPageWidget extends StatefulWidget {
+  const HistoryPageWidget({super.key});
+
+  static String routeName = 'HistoryPage';
+  static String routePath = 'historyPage';
+
+  @override
+  State<HistoryPageWidget> createState() => _HistoryPageWidgetState();
+}
+
+class _HistoryPageWidgetState extends State<HistoryPageWidget> {
+  late HistoryPageModel _model;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<String> _parseIngredients(String value) => value
+      .split(',')
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty)
+      .toList();
+
+  bool _isPlaceholderName(String value) {
+    final normalized = value.trim().toLowerCase();
+    return normalized.isEmpty ||
+        normalized == 'scanned product' ||
+        normalized == 'unknown product' ||
+        normalized == 'product';
+  }
+
+  String _productLabel(ScansRecord scan) {
+    final product = scan.productName.trim();
+    final brand = scan.brandName.trim();
+    if (!_isPlaceholderName(product)) {
+      return product;
+    }
+    if (brand.isNotEmpty && !_isPlaceholderName(brand)) {
+      return brand;
+    }
+    return 'Unnamed product';
+  }
+
+  String _brandLabel(ScansRecord scan) {
+    final brand = scan.brandName.trim();
+    if (brand.isEmpty || _isPlaceholderName(brand) || brand.toLowerCase() == 'auto-detected') {
+      return '';
+    }
+    return brand;
+  }
+
+  String _defaultRecommendationForScore(int score) {
+    if (score >= 80) {
+      return 'Great choice. Ingredients look generally safe.';
+    }
+    if (score >= 60) {
+      return 'Moderate profile. Consider portion size and frequency.';
+    }
+    return 'Lower score detected. Review additives and sugar levels.';
+  }
+
+  Future<void> _openScanInAnalysis(ScansRecord scan) async {
+    final score = (int.tryParse(scan.healthScore.trim()) ?? 70).clamp(1, 100);
+    final analysis = ScanAnalysisResult(
+      productName: _productLabel(scan),
+      brandName: _brandLabel(scan),
+      healthScore: score,
+      ingredients: _parseIngredients(scan.ingredients),
+        warnings: scan.warnings.take(3).toList(),
+        benefits: scan.benefits.take(3).toList(),
+      recommendation: scan.recommendation.trim().isNotEmpty
+          ? scan.recommendation.trim()
+          : _defaultRecommendationForScore(score),
+      impactForUser: scan.impactForUser,
+    );
+
+    Uint8List? imageBytes;
+    if (scan.productImage.startsWith('data:image/')) {
+      final comma = scan.productImage.indexOf(',');
+      if (comma > 0 && comma < scan.productImage.length - 1) {
+        try {
+          imageBytes = base64Decode(scan.productImage.substring(comma + 1));
+        } catch (_) {
+          imageBytes = null;
+        }
+      }
+    }
+
+    ScanSession.updateAnalysisOnly(
+      analysis,
+      bytes: imageBytes,
+      at: scan.scanDate ?? scan.createdTime,
+    );
+
+    if (!mounted) {
+      return;
+    }
+    context.pushNamed(ProductAnalysisWidget.routeName);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => HistoryPageModel());
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Color(0xFFF5F7F5),
+        appBar: AppBar(
+          backgroundColor: Color(0xFF1B5E20),
+          automaticallyImplyLeading: false,
+          leading: FlutterFlowIconButton(
+            borderColor: Colors.transparent,
+            borderRadius: 30.0,
+            borderWidth: 1.0,
+            buttonSize: 60.0,
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.white,
+              size: 30.0,
+            ),
+            onPressed: () async {
+              context.pop();
+            },
+          ),
+          title: Text(
+            'Scan History',
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+                  fontFamily: 'Inter Tight',
+                  color: Colors.white,
+                  fontSize: 22.0,
+                  letterSpacing: 0.0,
+                ),
+          ),
+          actions: [],
+          centerTitle: true,
+          elevation: 2.0,
+        ),
+        body: SafeArea(
+          top: true,
+          child: StreamBuilder<List<ScansRecord>>(
+            stream: queryScansRecord(
+              queryBuilder: (q) => q.where('user_id', isEqualTo: currentUserUid),
+              limit: 200,
+            ),
+            builder: (context, snapshot) {
+              final scans = [...(snapshot.data ?? const <ScansRecord>[])]
+                ..sort((a, b) =>
+                    (b.scanDate ?? b.createdTime ?? DateTime.fromMillisecondsSinceEpoch(0))
+                        .compareTo(
+                            a.scanDate ?? a.createdTime ?? DateTime.fromMillisecondsSinceEpoch(0)));
+              final currentAnalysis = ScanSession.latestAnalysis;
+              final hasCurrentAnalysis = currentAnalysis != null;
+              final hasAnyHistory = scans.isNotEmpty || hasCurrentAnalysis;
+
+              Widget buildImage(ScansRecord scan) {
+                if (scan.productImage.startsWith('data:image/')) {
+                  final comma = scan.productImage.indexOf(',');
+                  if (comma > 0 && comma < scan.productImage.length - 1) {
+                    try {
+                      final bytes = base64Decode(scan.productImage.substring(comma + 1));
+                      return Image.memory(bytes,
+                          width: 52.0, height: 52.0, fit: BoxFit.cover);
+                    } catch (_) {}
+                  }
+                }
+
+                if (scan.productImage.isNotEmpty) {
+                  return Image.network(
+                    scan.productImage,
+                    width: 52.0,
+                    height: 52.0,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        Icon(Icons.image_outlined, color: Color(0xFF57636C)),
+                  );
+                }
+
+                return Icon(Icons.inventory_2_rounded, color: Color(0xFF57636C));
+              }
+
+              return Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16.0),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 4.0,
+                        color: Color(0x1A000000),
+                        offset: Offset(0.0, 2.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
+                    child: !hasAnyHistory
+                        ? Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.history_rounded,
+                                color: Color(0xFF1B5E20),
+                                size: 80.0,
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 24.0, 0.0, 0.0),
+                                child: Text(
+                                  'No scans yet',
+                                  style: FlutterFlowTheme.of(context)
+                                      .headlineSmall
+                                      .override(
+                                        fontFamily: 'Inter Tight',
+                                        color: Color(0xFF1B5E20),
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 8.0, 0.0, 0.0),
+                                child: Text(
+                                  'Start scanning products to see your history',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        color: Color(0xFF57636C),
+                                        letterSpacing: 0.0,
+                                      ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 24.0, 0.0, 0.0),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    context.pushNamed(ProductScanningWidget.routeName);
+                                  },
+                                  text: 'Scan a Product',
+                                  options: FFButtonOptions(
+                                    width: 200.0,
+                                    height: 50.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: Color(0xFF1B5E20),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Inter Tight',
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
+                                        ),
+                                    elevation: 3.0,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(25.0),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : ListView.separated(
+                            itemCount: scans.length + (hasCurrentAnalysis ? 1 : 0),
+                            separatorBuilder: (_, __) => Divider(
+                              height: 1.0,
+                              color: Color(0xFFF0F0F0),
+                            ),
+                            itemBuilder: (context, index) {
+                              if (hasCurrentAnalysis && index == 0) {
+                                final score = currentAnalysis.healthScore;
+                                final scoreBg = score >= 80
+                                    ? Color(0xFFE8F5E9)
+                                    : score >= 60
+                                        ? Color(0xFFF3E5F5)
+                                        : Color(0xFFFCE4EC);
+                                final scoreColor = score >= 80
+                                    ? Color(0xFF1B5E20)
+                                    : score >= 60
+                                        ? Color(0xFF7B1FA2)
+                                        : Color(0xFFE91E63);
+                                final firstIngredient =
+                                    currentAnalysis.ingredients.isNotEmpty
+                                        ? currentAnalysis.ingredients.first
+                                        : 'No ingredients found';
+                                final productSubtitle =
+                                    '${currentAnalysis.brandName} · Current scan';
+
+                                return Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 8.0, 0.0, 8.0),
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () async {
+                                      context.pushNamed(ProductAnalysisWidget.routeName);
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 52.0,
+                                          height: 52.0,
+                                          decoration: BoxDecoration(
+                                            color: scoreBg,
+                                            borderRadius: BorderRadius.circular(14.0),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(14.0),
+                                            child: ScanSession.imageBytes != null
+                                                ? Image.memory(
+                                                    ScanSession.imageBytes!,
+                                                    width: 52.0,
+                                                    height: 52.0,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Icon(
+                                                    Icons.inventory_2_rounded,
+                                                    color: Color(0xFF57636C),
+                                                  ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                12.0, 0.0, 12.0, 0.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  currentAnalysis.productName,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: FlutterFlowTheme.of(context)
+                                                      .titleSmall,
+                                                ),
+                                                Text(
+                                                  productSubtitle,
+                                                  style: FlutterFlowTheme.of(context)
+                                                      .bodySmall
+                                                      .override(
+                                                        fontFamily: 'Inter',
+                                                        color: Color(0xFF57636C),
+                                                        letterSpacing: 0.0,
+                                                      ),
+                                                ),
+                                                Text(
+                                                  firstIngredient,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: FlutterFlowTheme.of(context)
+                                                      .bodySmall
+                                                      .override(
+                                                        fontFamily: 'Inter',
+                                                        color: scoreColor,
+                                                        letterSpacing: 0.0,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.0, vertical: 6.0),
+                                          decoration: BoxDecoration(
+                                            color: scoreBg,
+                                            borderRadius: BorderRadius.circular(8.0),
+                                          ),
+                                          child: Text(
+                                            score.toString(),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodySmall
+                                                .override(
+                                                  fontFamily: 'Inter',
+                                                  color: scoreColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 0.0,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              final scan =
+                                  scans[index - (hasCurrentAnalysis ? 1 : 0)];
+                              final score = int.tryParse(scan.healthScore.trim()) ?? 0;
+                              final scoreBg = score >= 80
+                                  ? Color(0xFFE8F5E9)
+                                  : score >= 60
+                                      ? Color(0xFFF3E5F5)
+                                      : Color(0xFFFCE4EC);
+                              final scoreColor = score >= 80
+                                  ? Color(0xFF1B5E20)
+                                  : score >= 60
+                                      ? Color(0xFF7B1FA2)
+                                      : Color(0xFFE91E63);
+                              final firstIngredient = scan.ingredients
+                                  .split(',')
+                                  .map((e) => e.trim())
+                                  .firstWhere((e) => e.isNotEmpty,
+                                      orElse: () => 'No ingredients found');
+                              final when = scan.scanDate ??
+                                  scan.createdTime ??
+                                  getCurrentTimestamp;
+                                final productTitle = _productLabel(scan);
+                                final productSubtitle = _brandLabel(scan).isNotEmpty
+                                  ? "${_brandLabel(scan)} · ${dateTimeFormat('yMMMd', when)}"
+                                  : dateTimeFormat('yMMMd', when);
+
+                              return Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 8.0, 0.0, 8.0),
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () async => _openScanInAnalysis(scan),
+                                  child: Row(
+                                  children: [
+                                    Container(
+                                      width: 52.0,
+                                      height: 52.0,
+                                      decoration: BoxDecoration(
+                                        color: scoreBg,
+                                        borderRadius: BorderRadius.circular(14.0),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(14.0),
+                                        child: buildImage(scan),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            12.0, 0.0, 12.0, 0.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              productTitle,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: FlutterFlowTheme.of(context)
+                                                  .titleSmall,
+                                            ),
+                                            Text(
+                                              productSubtitle,
+                                              style: FlutterFlowTheme.of(context)
+                                                  .bodySmall
+                                                  .override(
+                                                    fontFamily: 'Inter',
+                                                    color: Color(0xFF57636C),
+                                                    letterSpacing: 0.0,
+                                                  ),
+                                            ),
+                                            Text(
+                                              firstIngredient,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: FlutterFlowTheme.of(context)
+                                                  .bodySmall
+                                                  .override(
+                                                    fontFamily: 'Inter',
+                                                    color: scoreColor,
+                                                    letterSpacing: 0.0,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.0, vertical: 6.0),
+                                      decoration: BoxDecoration(
+                                        color: scoreBg,
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      child: Text(
+                                        score.toString(),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodySmall
+                                            .override(
+                                              fontFamily: 'Inter',
+                                              color: scoreColor,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 0.0,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}

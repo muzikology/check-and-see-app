@@ -1,0 +1,38 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Android signing and local config
+android/key.properties
+android/app/upload-keystore.jks
+android/app/*.keystore
+android/local.properties
+
+# iOS generated
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+
+# Sensitive env/config
+.env
+.env.*
+*.p12
+*.mobileprovision

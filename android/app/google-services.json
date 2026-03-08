@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "285904969298",
+    "project_id": "ai-health-scanner-5e3b9",
+    "storage_bucket": "ai-health-scanner-5e3b9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285904969298:android:0f7c5e8ee731347584898b",
+        "android_client_info": {
+          "package_name": "com.okuhle.checkandsee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQTFJZ852X9s6spvlUMcCRvE3VkRyYoeA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285904969298:android:f3c31d61e99f05fb84898b",
+        "android_client_info": {
+          "package_name": "com.okuhleit.checkandseeai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQTFJZ852X9s6spvlUMcCRvE3VkRyYoeA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
