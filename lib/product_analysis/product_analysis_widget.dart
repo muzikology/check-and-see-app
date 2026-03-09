@@ -13,6 +13,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'product_analysis_model.dart';
 export 'product_analysis_model.dart';
 
@@ -106,6 +107,58 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
   List<String> get _benefits => ScanSession.benefits.take(3).toList();
   List<String> get _ingredients => ScanSession.ingredients.take(6).toList();
 
+  String _shareSummary() {
+    final brand = ScanSession.brandName.trim();
+    final warningSummary = _warnings.isNotEmpty
+        ? _warnings.join('; ')
+        : 'No major warnings detected';
+    final benefitSummary = _benefits.isNotEmpty
+        ? _benefits.join('; ')
+        : 'No specific benefits detected';
+    final ingredientSummary = _ingredients.isNotEmpty
+        ? _ingredients.join(', ')
+        : 'No ingredient details captured';
+
+    return [
+      'Check and See - Scan Summary',
+      'Product: ${ScanSession.productName}',
+      if (brand.isNotEmpty) 'Brand: $brand',
+      'Health score: $_score/100',
+      'Warnings: $warningSummary',
+      'Benefits: $benefitSummary',
+      'Key ingredients: $ingredientSummary',
+      'Recommendation: ${ScanSession.recommendation.trim().isNotEmpty ? ScanSession.recommendation.trim() : _scoreLabel}',
+    ].join('\n');
+  }
+
+  Future<void> _handleShare() async {
+    final text = _shareSummary();
+    await Share.share(text, subject: 'Check and See - Scan Summary');
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Share sheet opened.'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  String _warningContext() {
+    if (ScanSession.recommendation.trim().isNotEmpty) {
+      return ScanSession.recommendation.trim();
+    }
+    return 'Detected from scanned label and nutrition profile.';
+  }
+
+  String _benefitContext() {
+    if (ScanSession.impactForUser.trim().isNotEmpty) {
+      return ScanSession.impactForUser.trim();
+    }
+    return 'Potential benefit based on ingredient and nutrient signals.';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -182,7 +235,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
           ? latest.productName.trim()
           : (!_isPlaceholderName(latest.brandName)
               ? latest.brandName.trim()
-              : 'Unnamed product');
+              : 'Latest scanned item');
       final brandName = !_isPlaceholderName(latest.brandName) &&
               latest.brandName.trim().toLowerCase() != 'auto-detected'
           ? latest.brandName.trim()
@@ -287,8 +340,8 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                   color: Color(0xFF1A1A2E),
                   size: 24.0,
                 ),
-                onPressed: () {
-                  print('IconButton pressed ...');
+                onPressed: () async {
+                  await _handleShare();
                 },
               ),
             ),
@@ -301,7 +354,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -485,7 +538,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                   ),
                 ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -769,7 +822,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                         ),
                                   ),
                                   Text(
-                                    ScanSession.recommendation,
+                                    _warningContext(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -842,7 +895,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                         ),
                                   ),
                                   Text(
-                                    ScanSession.recommendation,
+                                    _warningContext(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -915,7 +968,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                         ),
                                   ),
                                   Text(
-                                    ScanSession.recommendation,
+                                    _warningContext(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -946,7 +999,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -1064,9 +1117,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                         ),
                                   ),
                                   Text(
-                                    ScanSession.impactForUser.isNotEmpty
-                                        ? ScanSession.impactForUser
-                                        : 'Benefit derived from your scanned label.',
+                                    _benefitContext(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -1139,9 +1190,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                         ),
                                   ),
                                   Text(
-                                    ScanSession.impactForUser.isNotEmpty
-                                        ? ScanSession.impactForUser
-                                        : 'Benefit derived from your scanned label.',
+                                    _benefitContext(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -1214,9 +1263,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                         ),
                                   ),
                                   Text(
-                                    ScanSession.impactForUser.isNotEmpty
-                                        ? ScanSession.impactForUser
-                                        : 'Benefit derived from your scanned label.',
+                                    _benefitContext(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -1247,7 +1294,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(

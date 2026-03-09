@@ -52,6 +52,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>We use your camera to capture product labels and profile selfies.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We use your photo library to upload product and profile images.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We may save processed images for your scan history.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 
 
 

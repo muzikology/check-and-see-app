@@ -53,6 +53,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
 
   InputDecoration _fieldDecoration(String label) => InputDecoration(
         labelText: label,
+      labelStyle: const TextStyle(color: Color(0xFF4A5568)),
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(
@@ -67,6 +68,11 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
           borderRadius: BorderRadius.circular(12.0),
           borderSide: BorderSide(color: const Color(0xFF1B5E20), width: 1.2),
         ),
+      );
+
+  TextStyle get _inputTextStyle => const TextStyle(
+        color: Color(0xFF111827),
+        fontSize: 15.0,
       );
 
   Future<void> _signIn() async {
@@ -188,7 +194,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                     Text(
-                      'Use your account to test real Firebase persistence.',
+                      'Sign in to continue with your account.',
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             font: GoogleFonts.inter(
                               fontStyle:
@@ -222,6 +228,8 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                 TextFormField(
                                   controller: _signInEmailController,
                                   decoration: _fieldDecoration('Email'),
+                                  style: _inputTextStyle,
+                                  cursorColor: const Color(0xFF1B5E20),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) => (value == null ||
                                           value.trim().isEmpty ||
@@ -233,6 +241,9 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                 TextFormField(
                                   controller: _signInPasswordController,
                                   decoration: _fieldDecoration('Password'),
+                                  style: _inputTextStyle,
+                                  cursorColor: const Color(0xFF1B5E20),
+                                  obscuringCharacter: '•',
                                   obscureText: true,
                                   validator: (value) =>
                                       (value == null || value.length < 6)
@@ -272,6 +283,8 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                 TextFormField(
                                   controller: _signUpNameController,
                                   decoration: _fieldDecoration('Full Name'),
+                                  style: _inputTextStyle,
+                                  cursorColor: const Color(0xFF1B5E20),
                                   validator: (value) => (value == null ||
                                           value.trim().length < 2)
                                       ? 'Enter your name.'
@@ -281,6 +294,8 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                 TextFormField(
                                   controller: _signUpEmailController,
                                   decoration: _fieldDecoration('Email'),
+                                  style: _inputTextStyle,
+                                  cursorColor: const Color(0xFF1B5E20),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) => (value == null ||
                                           value.trim().isEmpty ||
@@ -292,6 +307,9 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                 TextFormField(
                                   controller: _signUpPasswordController,
                                   decoration: _fieldDecoration('Password'),
+                                  style: _inputTextStyle,
+                                  cursorColor: const Color(0xFF1B5E20),
+                                  obscuringCharacter: '•',
                                   obscureText: true,
                                   validator: (value) =>
                                       (value == null || value.length < 6)

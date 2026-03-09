@@ -188,16 +188,55 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
     );
 
     if (action == 'camera') {
-      await _pickScanImage(ImageSource.camera);
+      await _showCameraModeOptions();
     } else if (action == 'gallery') {
       await _pickScanImage(ImageSource.gallery);
     }
   }
 
-  Future<void> _pickScanImage(ImageSource source) async {
+  Future<void> _showCameraModeOptions() async {
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.photo_camera_back_outlined),
+              title: Text('Take product photo (rear camera)'),
+              onTap: () => Navigator.of(context).pop('rear'),
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_camera_front_outlined),
+              title: Text('Take selfie (front camera)'),
+              onTap: () => Navigator.of(context).pop('front'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (action == 'rear') {
+      await _pickScanImage(
+        ImageSource.camera,
+        preferredCameraDevice: CameraDevice.rear,
+      );
+    } else if (action == 'front') {
+      await _pickScanImage(
+        ImageSource.camera,
+        preferredCameraDevice: CameraDevice.front,
+      );
+    }
+  }
+
+  Future<void> _pickScanImage(
+    ImageSource source, {
+    CameraDevice preferredCameraDevice = CameraDevice.rear,
+  }) async {
     try {
       final pickedFile = await _imagePicker.pickImage(
         source: source,
+        preferredCameraDevice: preferredCameraDevice,
         maxWidth: 1400,
         maxHeight: 1400,
         imageQuality: 88,
@@ -526,7 +565,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                     children: [
                       FFButtonWidget(
                         onPressed: () async {
-                          await _pickScanImage(ImageSource.camera);
+                          await _showCameraModeOptions();
                         },
                         text: 'Scan Product',
                         icon: Icon(

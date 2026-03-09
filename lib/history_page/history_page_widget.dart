@@ -86,7 +86,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
     if (brand.isNotEmpty && !_isPlaceholderName(brand)) {
       return brand;
     }
-    return 'Unnamed product';
+    return 'Latest scanned item';
   }
 
   String _brandLabel(ScansRecord scan) {
@@ -213,8 +213,21 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                         .compareTo(
                             a.scanDate ?? a.createdTime ?? DateTime.fromMillisecondsSinceEpoch(0)));
               final currentAnalysis = ScanSession.latestAnalysis;
-              final hasCurrentAnalysis = currentAnalysis != null;
-              final hasAnyHistory = scans.isNotEmpty || hasCurrentAnalysis;
+              final latestPersisted = scans.isNotEmpty ? scans.first : null;
+              var includeCurrentAnalysis = currentAnalysis != null;
+              if (includeCurrentAnalysis && latestPersisted != null) {
+                final sameName = _productLabel(latestPersisted).toLowerCase() ==
+                    currentAnalysis!.productName.trim().toLowerCase();
+                final persistedAt = latestPersisted.scanDate ?? latestPersisted.createdTime;
+                final currentAt = ScanSession.scannedAt;
+                final nearSameTime = persistedAt != null &&
+                    currentAt != null &&
+                    (persistedAt.difference(currentAt).inSeconds).abs() <= 20;
+                if (sameName && nearSameTime) {
+                  includeCurrentAnalysis = false;
+                }
+              }
+              final hasAnyHistory = scans.isNotEmpty || includeCurrentAnalysis;
 
               Widget buildImage(ScansRecord scan) {
                 if (scan.productImage.startsWith('data:image/')) {
@@ -334,13 +347,13 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                             ],
                           )
                         : ListView.separated(
-                            itemCount: scans.length + (hasCurrentAnalysis ? 1 : 0),
+                          itemCount: scans.length + (includeCurrentAnalysis ? 1 : 0),
                             separatorBuilder: (_, __) => Divider(
                               height: 1.0,
                               color: Color(0xFFF0F0F0),
                             ),
                             itemBuilder: (context, index) {
-                              if (hasCurrentAnalysis && index == 0) {
+                              if (includeCurrentAnalysis && index == 0) {
                                 final score = currentAnalysis.healthScore;
                                 final scoreBg = score >= 80
                                     ? Color(0xFFE8F5E9)
@@ -457,8 +470,8 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                 );
                               }
 
-                              final scan =
-                                  scans[index - (hasCurrentAnalysis ? 1 : 0)];
+                                final scan =
+                                  scans[index - (includeCurrentAnalysis ? 1 : 0)];
                               final score = int.tryParse(scan.healthScore.trim()) ?? 0;
                               final scoreBg = score >= 80
                                   ? Color(0xFFE8F5E9)

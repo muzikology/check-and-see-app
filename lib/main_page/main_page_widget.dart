@@ -138,7 +138,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
     if (brand.isNotEmpty && !_isPlaceholderName(brand)) {
       return brand;
     }
-    return 'Unnamed product';
+    return 'Latest scanned item';
   }
 
   String _brandLabel(ScansRecord scan) {
@@ -250,6 +250,42 @@ class _MainPageWidgetState extends State<MainPageWidget> {
       return;
     }
     context.pushNamed(ProductAnalysisWidget.routeName);
+  }
+
+  Future<void> _deleteScanRecord(ScansRecord scan) async {
+    final confirm = await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('Delete product?'),
+            content: const Text(
+              'This will remove the scan from your history and main page list.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (!confirm) {
+      return;
+    }
+
+    await scan.reference.delete();
+
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Product deleted.')),
+    );
   }
 
   @override
@@ -464,7 +500,12 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                     if (query.isEmpty) {
                       return true;
                     }
-                    return scan.productName.toLowerCase().contains(query);
+                    final haystack = [
+                      scan.productName,
+                      scan.brandName,
+                      scan.ingredients,
+                    ].join(' ').toLowerCase();
+                    return haystack.contains(query);
                   })
                   .toList();
                   _scheduleLabelRepairs(scans);
@@ -1520,6 +1561,32 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                               color: Color(0xFF9CA3AF),
                                               size: 20.0,
                                             ),
+                                          ),
+                                          PopupMenuButton<String>(
+                                            icon: Icon(
+                                              Icons.more_vert_rounded,
+                                              color: Color(0xFF6B7280),
+                                              size: 18.0,
+                                            ),
+                                            onSelected: (value) async {
+                                              if (value == 'view') {
+                                                await _openScanInAnalysis(scan);
+                                                return;
+                                              }
+                                              if (value == 'delete') {
+                                                await _deleteScanRecord(scan);
+                                              }
+                                            },
+                                            itemBuilder: (context) => const [
+                                              PopupMenuItem<String>(
+                                                value: 'view',
+                                                child: Text('View analysis'),
+                                              ),
+                                              PopupMenuItem<String>(
+                                                value: 'delete',
+                                                child: Text('Delete product'),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
