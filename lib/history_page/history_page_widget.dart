@@ -354,7 +354,8 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                             ),
                             itemBuilder: (context, index) {
                               if (includeCurrentAnalysis && index == 0) {
-                                final score = currentAnalysis.healthScore;
+                                final analysis = currentAnalysis!;
+                                final score = analysis.healthScore;
                                 final scoreBg = score >= 80
                                     ? Color(0xFFE8F5E9)
                                     : score >= 60
@@ -366,11 +367,11 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                         ? Color(0xFF7B1FA2)
                                         : Color(0xFFE91E63);
                                 final firstIngredient =
-                                    currentAnalysis.ingredients.isNotEmpty
-                                        ? currentAnalysis.ingredients.first
+                                  analysis.ingredients.isNotEmpty
+                                    ? analysis.ingredients.first
                                         : 'No ingredients found';
                                 final productSubtitle =
-                                    '${currentAnalysis.brandName} · Current scan';
+                                  '${analysis.brandName} · Current scan';
 
                                 return Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
@@ -413,7 +414,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  currentAnalysis.productName,
+                                                  analysis.productName,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: FlutterFlowTheme.of(context)
