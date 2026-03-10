@@ -293,9 +293,9 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF5F5F5),
+        backgroundColor: Color(0xFFF2F2F5),
         appBar: AppBar(
-          backgroundColor: Color(0xFFF5F5F5),
+          backgroundColor: Color(0xFFF2F2F5),
           automaticallyImplyLeading: false,
           leading: Padding(
             padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
@@ -355,25 +355,25 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 10.0, 16.0, 0.0),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        blurRadius: 16.0,
-                        color: Color(0x14000000),
+                        blurRadius: 26.0,
+                        color: Color(0x120A1220),
                         offset: Offset(
                           0.0,
-                          4.0,
+                          12.0,
                         ),
                       )
                     ],
-                    borderRadius: BorderRadius.circular(24.0),
+                    borderRadius: BorderRadius.circular(26.0),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(18.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -592,7 +592,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                 animation: true,
                                 animateFromLastPercent: true,
                                 progressColor: _scoreColor,
-                                backgroundColor: Color(0xFFF5F5F5),
+                                backgroundColor: Color(0xFFF2F2F5),
                                 startAngle: 270.0,
                               ),
                               Column(
@@ -1451,7 +1451,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                         padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                         iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         iconColor: Colors.white,
-                        color: Color(0xFF1B5E20),
+                        color: Color(0xFF2F8F46),
                         textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                               fontFamily: 'Inter Tight',
                               color: Colors.white,
@@ -1481,18 +1481,18 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                         height: 56.0,
                         padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                         iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        iconColor: Color(0xFF1B5E20),
-                        color: Color(0xFFF5F7F5),
+                        iconColor: Color(0xFF2F8F46),
+                        color: Color(0xFFF7F0EB),
                         textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                               fontFamily: 'Inter Tight',
-                              color: Color(0xFF1B5E20),
+                              color: Color(0xFF2F8F46),
                               fontSize: 16.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w600,
                             ),
                         elevation: 0.0,
                         borderSide: BorderSide(
-                          color: Color(0xFF1B5E20),
+                          color: Color(0xFF2F8F46),
                           width: 1.5,
                         ),
                         borderRadius: BorderRadius.circular(16.0),
@@ -1513,39 +1513,38 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
           ),
         ),
         bottomNavigationBar: Container(
+          margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 14.0),
           decoration: BoxDecoration(
             color: Colors.white,
-            boxShadow: [
+            borderRadius: BorderRadius.circular(28.0),
+            boxShadow: const [
               BoxShadow(
-                blurRadius: 10.0,
-                color: Color(0x1A000000),
-                offset: Offset(0.0, -2.0),
+                blurRadius: 24.0,
+                color: Color(0x180F172A),
+                offset: Offset(0.0, 8.0),
               )
             ],
           ),
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
+            padding: const EdgeInsetsDirectional.fromSTEB(14.0, 10.0, 14.0, 10.0),
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
                   onTap: () async {
                     context.pushNamed(MainPageWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.home_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.home_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1557,19 +1556,17 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                   onTap: () async {
                     context.pushNamed(ProductScanningWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.qr_code_scanner_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.qr_code_scanner_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1581,19 +1578,17 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                   onTap: () async {
                     context.pushNamed(HealthInsightDashboardWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.insights_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.insights_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1605,19 +1600,17 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                   onTap: () async {
                     context.pushNamed(HistoryPageWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.history_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.history_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1629,19 +1622,17 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                   onTap: () async {
                     context.pushNamed(UserProfileWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.person_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.person_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),

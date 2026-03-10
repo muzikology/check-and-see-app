@@ -16,7 +16,7 @@ import 'index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Inter and InterTight are referenced via google_fonts across the app.
+  // Sora and Plus Jakarta Sans are applied through the shared theme layer.
   // Allow runtime fetching on web unless all required font files are bundled.
   GoogleFonts.config.allowRuntimeFetching = true;
   GoRouter.optionURLReflectsImperativeAPIs = true;
@@ -112,11 +112,30 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: false,
+        fontFamily: GoogleFonts.openSans().fontFamily,
+        textTheme: GoogleFonts.openSansTextTheme(),
+        scaffoldBackgroundColor: const Color(0xFFF2F2F5),
+        cardColor: const Color(0xFFFFFFFF),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFF2F2F5),
+          foregroundColor: Color(0xFF1F2332),
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+        ),
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFF2F8F46),
+          secondary: Color(0xFFB78466),
+          surface: Color(0xFFF2F2F5),
+        ),
       ),
       darkTheme: _amoledDark
           ? ThemeData(
               brightness: Brightness.dark,
               useMaterial3: false,
+              fontFamily: GoogleFonts.openSans().fontFamily,
+              textTheme: GoogleFonts.openSansTextTheme(
+                ThemeData.dark().textTheme,
+              ),
               scaffoldBackgroundColor: const Color(0xFF000000),
               cardColor: const Color(0xFF0A0A0A),
               colorScheme: const ColorScheme.dark(

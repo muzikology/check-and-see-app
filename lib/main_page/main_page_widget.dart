@@ -313,9 +313,9 @@ class _MainPageWidgetState extends State<MainPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Color(0xFFF2F2F5),
         appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Color(0xFFF2F2F5),
           automaticallyImplyLeading: false,
           title: Padding(
             padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
@@ -336,7 +336,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   .bodySmall
                                   .fontStyle,
                             ),
-                            color: Color(0xFF7A9E7A),
+                            color: Color(0xFF8C8F9A),
                             fontSize: 13.0,
                             letterSpacing: 0.0,
                             fontWeight: FontWeight.w500,
@@ -356,7 +356,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                       .fontStyle,
                                 ),
                                 color: Color(0xFF1A1A2E),
-                                fontSize: 22.0,
+                                fontSize: 24.0,
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FlutterFlowTheme.of(context)
@@ -372,7 +372,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       width: 44.0,
                       height: 44.0,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE8F5E9),
+                        color: Color(0xFFFFFFFF),
                         shape: BoxShape.circle,
                       ),
                       child: ClipRRect(
@@ -400,7 +400,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                           .bodyMedium
                                                           .fontStyle,
                                                 ),
-                                                color: Color(0xFF1B5E20),
+                                                color: Color(0xFF1F2332),
                                                 letterSpacing: 0.0,
                                               ),
                                         ),
@@ -423,7 +423,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                              color: Color(0xFF1B5E20),
+                                              color: Color(0xFF1F2332),
                                               letterSpacing: 0.0,
                                             ),
                                       ),
@@ -441,7 +441,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                               .bodyMedium
                                               .fontStyle,
                                         ),
-                                        color: Color(0xFF1B5E20),
+                                        color: Color(0xFF1F2332),
                                         letterSpacing: 0.0,
                                       ),
                                 ),
@@ -457,7 +457,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                           color: Colors.green,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Color(0xFFF5F7F5),
+                            color: Color(0xFFF2F2F5),
                             width: 2.0,
                           ),
                         ),
@@ -495,6 +495,9 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       .round();
               final alertCount = scans.where((s) => parseScore(s) < 60).length;
               final latestScan = scans.isNotEmpty ? scans.first : null;
+                final isBeautyFocus =
+                  (latestScan?.productType.toLowerCase().trim() ?? '') ==
+                    'beauty';
               final query = _searchQuery.trim().toLowerCase();
               final visibleScans = scans
                   .where((scan) {
@@ -516,13 +519,15 @@ class _MainPageWidgetState extends State<MainPageWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(24.0, 28.0, 24.0, 28.0),
+                    padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 22.0, 20.0, 22.0),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Color(0xFF2FA34A), Color(0xFF1C7D33)],
+                        colors: isBeautyFocus
+                            ? [Color(0xFFD0A98F), Color(0xFFB78466)]
+                            : [Color(0xFF62C476), Color(0xFF3FAF58)],
                         stops: [0.0, 1.0],
                         begin: AlignmentDirectional(-1.0, -1.0),
                         end: AlignmentDirectional(1.0, 1.0),
@@ -530,17 +535,17 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 28.0,
-                          color: Color(0x3D1C7D33),
+                          color: Color(0x2A78604F),
                           offset: Offset(
                             0.0,
                             8.0,
                           ),
                         )
                       ],
-                      borderRadius: BorderRadius.circular(28.0),
+                      borderRadius: BorderRadius.circular(32.0),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(18.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -555,7 +560,9 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Scan a Product',
+                                    isBeautyFocus
+                                        ? 'Beauty Companion'
+                                        : 'Scan a Product',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -577,7 +584,9 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                         ),
                                   ),
                                   Text(
-                                    'Know What\'s\nInside',
+                                    isBeautyFocus
+                                        ? 'Skin + Ingredient\nAssistant'
+                                        : 'Know What\'s\nInside',
                                     style: FlutterFlowTheme.of(context)
                                         .headlineLarge
                                         .override(
@@ -619,6 +628,57 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               ),
                             ],
                           ),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: const Color(0x2AFFFFFF),
+                              borderRadius: BorderRadius.circular(16.0),
+                              border: Border.all(
+                                color: const Color(0x3DFFFFFF),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      isBeautyFocus
+                                          ? 'Daily routine\nprogress'
+                                          : 'Weekly nutrition\nconsistency',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodySmall
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodySmall
+                                                      .fontStyle,
+                                            ),
+                                            color: const Color(0xE6FFFFFF),
+                                            letterSpacing: 0.0,
+                                          ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 120.0,
+                                    child: LinearProgressIndicator(
+                                      value: isBeautyFocus ? 0.72 : 0.63,
+                                      minHeight: 8.0,
+                                      backgroundColor: const Color(0x40FFFFFF),
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                        Color(0xFFFFFFFF),
+                                      ),
+                                      borderRadius: BorderRadius.circular(999.0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                           InkWell(
                             onTap: () async {
                               context.pushNamed(ProductScanningWidget.routeName);
@@ -626,7 +686,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                             borderRadius: BorderRadius.circular(20.0),
                             child: Container(
                               width: double.infinity,
-                              height: 130.0,
+                              height: 138.0,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [Color(0x55FFFFFF), Color(0x30FFFFFF)],
@@ -675,7 +735,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: Icon(
                                               Icons.qr_code_scanner_rounded,
-                                              color: Color(0xFF218E3B),
+                                              color: Color(0xFF45B764),
                                               size: 34.0,
                                             ),
                                           ),
@@ -945,7 +1005,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Icon(
                                     Icons.favorite_border_rounded,
-                                    color: Color(0xFF1B5E20),
+                                    color: Color(0xFF2F8F46),
                                     size: 20.0,
                                   ),
                                 ),
@@ -965,7 +1025,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                   .headlineSmall
                                                   .fontStyle,
                                         ),
-                                        color: Color(0xFF1B5E20),
+                                        color: Color(0xFF2F8F46),
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.bold,
@@ -1029,14 +1089,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 width: 40.0,
                                 height: 40.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFF3E5F5),
+                                  color: Color(0xFFF7F0EB),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Icon(
                                     Icons.bar_chart_rounded,
-                                    color: Colors.purple,
+                                    color: Color(0xFFB78466),
                                     size: 20.0,
                                   ),
                                 ),
@@ -1056,7 +1116,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                   .headlineSmall
                                                   .fontStyle,
                                         ),
-                                        color: Colors.purple,
+                                        color: Color(0xFFB78466),
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.bold,
@@ -1218,7 +1278,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                     .bodySmall
                                     .fontStyle,
                               ),
-                              color: Color(0xFF1B5E20),
+                              color: Color(0xFF2F8F46),
                               fontSize: 13.0,
                               letterSpacing: 0.0,
                             ),
@@ -1279,7 +1339,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                     )
                                   : null,
                               filled: true,
-                              fillColor: Color(0xFFF5F7F5),
+                              fillColor: Color(0xFFFFFFFF),
                               contentPadding: EdgeInsetsDirectional.fromSTEB(
                                   12.0, 10.0, 12.0, 10.0),
                               enabledBorder: OutlineInputBorder(
@@ -1291,7 +1351,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0xFF1B5E20),
+                                  color: Color(0xFF2F8F46),
                                   width: 1.2,
                                 ),
                                 borderRadius: BorderRadius.circular(12.0),
@@ -1321,14 +1381,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 final scan = visibleScans[index];
                                 final score = int.tryParse(scan.healthScore.trim()) ?? 0;
                               final scoreColor = score >= 80
-                                  ? Color(0xFF1B5E20)
+                                  ? Color(0xFF2F8F46)
                                   : score >= 60
-                                      ? Color(0xFF7B1FA2)
+                                      ? Color(0xFFB78466)
                                       : Color(0xFFE91E63);
                               final scoreBg = score >= 80
                                   ? Color(0xFFE8F5E9)
                                   : score >= 60
-                                      ? Color(0xFFF3E5F5)
+                                      ? Color(0xFFF7F0EB)
                                       : Color(0xFFFCE4EC);
                               final firstIngredient = scan.ingredients
                                   .split(',')
@@ -1669,7 +1729,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                     ),
                                     child: Icon(
                                       Icons.lightbulb_rounded,
-                                      color: Color(0xFF1B5E20),
+                                      color: Color(0xFF2F8F46),
                                       size: 24.0,
                                     ),
                                   ),
@@ -1729,39 +1789,44 @@ class _MainPageWidgetState extends State<MainPageWidget> {
           ),
         ),
         bottomNavigationBar: Container(
+          margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 14.0),
           decoration: BoxDecoration(
             color: Colors.white,
-            boxShadow: [
+            borderRadius: BorderRadius.circular(28.0),
+            boxShadow: const [
               BoxShadow(
-                blurRadius: 10.0,
-                color: Color(0x1A000000),
-                offset: Offset(0.0, -2.0),
+                blurRadius: 24.0,
+                color: Color(0x180F172A),
+                offset: Offset(0.0, 8.0),
               )
             ],
           ),
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
+            padding: const EdgeInsetsDirectional.fromSTEB(14.0, 10.0, 14.0, 10.0),
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
-                  onTap: () async {
-                    // Already on MainPage
-                  },
+                  onTap: () async {},
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.home_rounded,
-                        color: Color(0xFF1B5E20),
-                        size: 28.0,
+                      Container(
+                        width: 36.0,
+                        height: 36.0,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF7F0EB),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: const Icon(Icons.home_rounded,
+                          color: Color(0xFFB78466), size: 22.0),
                       ),
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF1B5E20),
+                              color: const Color(0xFFB78466),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w600,
@@ -1774,19 +1839,17 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                   onTap: () async {
                     context.pushNamed(ProductScanningWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.qr_code_scanner_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.qr_code_scanner_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1798,19 +1861,17 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                   onTap: () async {
                     context.pushNamed(HealthInsightDashboardWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.insights_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.insights_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1822,19 +1883,17 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                   onTap: () async {
                     context.pushNamed(HistoryPageWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.history_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.history_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1850,19 +1909,17 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                           : AuthPageWidget.routeName,
                     );
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.person_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.person_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),

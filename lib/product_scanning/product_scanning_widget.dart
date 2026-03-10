@@ -54,9 +54,9 @@ export 'product_scanning_model.dart';
 ///
 /// Text:
 /// Tips for best scan:
-/// • Ensure good lighting
-/// • Capture full ingredient list
-/// • Avoid blurry images
+/// G�� Ensure good lighting
+/// G�� Capture full ingredient list
+/// G�� Avoid blurry images
 ///
 /// Colors:
 /// Primary: Deep green #1B5E20
@@ -86,6 +86,15 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
   String get _scanLabel => _selectedProductType == ScanProductType.food
       ? 'Align food product label within frame'
       : 'Align beauty product label within frame';
+
+    bool get _isBeautyMode => _selectedProductType == ScanProductType.beauty;
+    Color get _accentColor =>
+      _isBeautyMode ? const Color(0xFFB78466) : const Color(0xFFA07A5E);
+    Color get _accentSoft =>
+      _isBeautyMode ? const Color(0xFFE8D4C7) : const Color(0xFFE6D8CE);
+    List<Color> get _heroGradient => _isBeautyMode
+      ? const [Color(0xFFE1C5B3), Color(0xFFBE8F72)]
+      : const [Color(0xFFDCCCBF), Color(0xFFB5967F)];
 
   String _bytesToDataUrl(Uint8List bytes) =>
       'data:image/jpeg;base64,${base64Encode(bytes)}';
@@ -303,9 +312,9 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF3FAF5),
+        backgroundColor: Color(0xFFF2F2F5),
         appBar: AppBar(
-          backgroundColor: Color(0xFFF3FAF5),
+          backgroundColor: Color(0xFFF2F2F5),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -314,7 +323,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
             buttonSize: 44.0,
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: Color(0xFF1B5E20),
+              color: Color(0xFF1F2332),
               size: 24.0,
             ),
             onPressed: () async {
@@ -324,12 +333,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
           title: Text(
             'Scan Product',
             style: FlutterFlowTheme.of(context).titleLarge.override(
-                  font: GoogleFonts.interTight(
+                  font: GoogleFonts.nunito(
                     fontWeight: FontWeight.bold,
                     fontStyle:
                         FlutterFlowTheme.of(context).titleLarge.fontStyle,
                   ),
-                  color: Color(0xFF1B5E20),
+                  color: Color(0xFF1F2332),
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.bold,
                   fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
@@ -345,7 +354,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                 buttonSize: 44.0,
                 icon: Icon(
                   Icons.history_rounded,
-                  color: Color(0xFF1B5E20),
+                  color: Color(0xFF1F2332),
                   size: 24.0,
                 ),
                 onPressed: () async {
@@ -371,8 +380,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8F5EE),
-                      borderRadius: BorderRadius.circular(14.0),
+                      color: const Color(0xFFFFFFFF),
+                      borderRadius: BorderRadius.circular(16.0),
+                      border: Border.all(
+                        color: const Color(0xFFE6E8EF),
+                        width: 1.0,
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -388,12 +401,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                             options: FFButtonOptions(
                               height: 42.0,
                               color: _selectedProductType == ScanProductType.food
-                                  ? const Color(0xFF1B5E20)
+                                  ? _accentColor
                                   : Colors.transparent,
                               textStyle: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
+                                    font: GoogleFonts.nunito(
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -401,7 +414,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                     ),
                                     color: _selectedProductType == ScanProductType.food
                                         ? Colors.white
-                                        : const Color(0xFF1B5E20),
+                                        : const Color(0xFF475467),
                                     letterSpacing: 0.0,
                                   ),
                               elevation: 0.0,
@@ -422,12 +435,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                             options: FFButtonOptions(
                               height: 42.0,
                               color: _selectedProductType == ScanProductType.beauty
-                                  ? const Color(0xFF1B5E20)
+                                  ? _accentColor
                                   : Colors.transparent,
                               textStyle: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
+                                    font: GoogleFonts.nunito(
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -435,7 +448,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                     ),
                                     color: _selectedProductType == ScanProductType.beauty
                                         ? Colors.white
-                                        : const Color(0xFF1B5E20),
+                                        : const Color(0xFF475467),
                                     letterSpacing: 0.0,
                                   ),
                               elevation: 0.0,
@@ -453,7 +466,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                       height: 380.0,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Color(0xFF62C476), Color(0xFF3FAF58)],
+                          colors: _heroGradient,
                           stops: [0.0, 1.0],
                           begin: AlignmentDirectional(-1.0, -1.0),
                           end: AlignmentDirectional(1.0, 1.0),
@@ -461,7 +474,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 28.0,
-                            color: Color(0x3D1C7D33),
+                            color: Color(0x1F1F2332),
                             offset: Offset(
                               0.0,
                               8.0,
@@ -475,7 +488,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                         child: Stack(
                           children: [
                             Opacity(
-                              opacity: _selectedImageBytes != null ? 1.0 : 0.6,
+                              opacity: _selectedImageBytes != null ? 0.9 : 0.45,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(0.0),
                                 child: _selectedImageBytes != null
@@ -498,17 +511,23 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                               height: double.infinity,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [
-                                    _selectedImageBytes != null
-                                    ? Color(0x443D8A4F)
-                                    : Color(0x7A58B06E),
-                                    _selectedImageBytes != null
-                                    ? Color(0x2D74C788)
-                                    : Color(0x4F74C788),
-                                    _selectedImageBytes != null
-                                    ? Color(0x443D8A4F)
-                                    : Color(0x7A58B06E)
-                                  ],
+                                  colors: _selectedImageBytes != null
+                                      ? const [
+                                          Color(0x1AFFFFFF),
+                                          Color(0x331F2332),
+                                          Color(0x5C1F2332),
+                                        ]
+                                      : (_isBeautyMode
+                                          ? const [
+                                              Color(0x52E1C5B3),
+                                              Color(0x5EBE8F72),
+                                              Color(0x731F2332),
+                                            ]
+                                          : const [
+                                              Color(0x52DCCCBF),
+                                              Color(0x5EB5967F),
+                                              Color(0x731F2332),
+                                            ]),
                                   stops: [0.0, 0.5, 1.0],
                                   begin: AlignmentDirectional(0.0, -1.0),
                                   end: AlignmentDirectional(0, 1.0),
@@ -516,88 +535,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                               ),
                             ),
                             Align(
-                              alignment: AlignmentDirectional(0.0, -0.2),
-                              child: Container(
-                                width: 260.0,
-                                height: 260.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  border: Border.all(
-                                    color: Color(0xCCFFFFFF),
-                                    width: 2.0,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Align(
-                                      alignment:
-                                          AlignmentDirectional(-1.0, -1.0),
-                                      child: Container(
-                                        width: 30.0,
-                                        height: 30.0,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(0.0),
-                                          border: Border.all(
-                                            color: Color(0xFF74D88E),
-                                            width: 3.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment:
-                                          AlignmentDirectional(1.0, -1.0),
-                                      child: Container(
-                                        width: 30.0,
-                                        height: 30.0,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(0.0),
-                                          border: Border.all(
-                                            color: Color(0xFF74D88E),
-                                            width: 3.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment:
-                                          AlignmentDirectional(-1.0, 1.0),
-                                      child: Container(
-                                        width: 30.0,
-                                        height: 30.0,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(0.0),
-                                          border: Border.all(
-                                            color: Color(0xFF74D88E),
-                                            width: 3.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: AlignmentDirectional(1.0, 1.0),
-                                      child: Container(
-                                        width: 30.0,
-                                        height: 30.0,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(0.0),
-                                          border: Border.all(
-                                            color: Colors.green,
-                                            width: 3.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(0.0, 0.7),
+                              alignment: AlignmentDirectional(0.0, 0.0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -607,78 +545,85 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                     width: 52.0,
                                     height: 52.0,
                                     decoration: BoxDecoration(
-                                      color: Color(0x40FFFFFF),
+                                      color: Color(0x66FFFFFF),
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                            color: Color(0xFF74D88E),
+                                        color: Color(0xCCFFFFFF),
                                         width: 1.0,
                                       ),
                                     ),
                                     child: Align(
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Container(
-                                        width: 52.0,
-                                        height: 52.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(0x40FFFFFF),
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: Color(0x80FFFFFF),
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        child: Align(
-                                          alignment: AlignmentDirectional(0.0, 0.0),
-                                          child: Icon(
-                                            Icons.camera_alt_rounded,
-                                            color: Colors.white,
-                                            size: 28.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.82),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            14.0, 0.0, 14.0, 0.0),
-                                        child: Text(
-                                          _scanLabel,
-                                          textAlign: TextAlign.center,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                font: GoogleFonts.inter(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                                color: Colors.white,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
-                                        ),
-                                      ),
-                                    ),
                                       alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Icon(
                                         Icons.camera_alt_rounded,
                                         color: Colors.white,
+                                        size: 28.0,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    _scanLabel,
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.openSans(
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w500,
+                                          shadows: const [
+                                            Shadow(
+                                              color: Color(0x661F2332),
+                                              blurRadius: 8.0,
+                                              offset: Offset(0.0, 2.0),
+                                            ),
+                                          ],
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                ].divide(SizedBox(height: 12.0)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      FFButtonWidget(
+                        onPressed: () async {
+                          await _showCameraModeOptions();
+                        },
+                        text: _selectedProductType == ScanProductType.food
+                            ? 'Scan Food Product'
+                            : 'Scan Beauty Product',
+                        icon: Icon(
+                          Icons.qr_code_scanner_rounded,
+                          size: 20.0,
+                        ),
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 56.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               24.0, 0.0, 24.0, 0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
                           iconColor: Colors.white,
-                          color: Color(0xFF218E3B),
+                          color: _accentColor,
                           textStyle:
                               FlutterFlowTheme.of(context).titleSmall.override(
-                                    font: GoogleFonts.interTight(
+                                    font: GoogleFonts.nunito(
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
@@ -718,17 +663,17 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                               24.0, 0.0, 24.0, 0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
-                          iconColor: Color(0xFF1B5E20),
+                          iconColor: _accentColor,
                           color: Color(0xFFFFFFFF),
                           textStyle:
                               FlutterFlowTheme.of(context).titleSmall.override(
-                                    font: GoogleFonts.interTight(
+                                    font: GoogleFonts.nunito(
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF1B5E20),
+                                    color: _accentColor,
                                     fontSize: 16.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
@@ -738,7 +683,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   ),
                           elevation: 0.0,
                           borderSide: BorderSide(
-                            color: Color(0xFF1B5E20),
+                            color: _accentColor,
                             width: 1.5,
                           ),
                           borderRadius: BorderRadius.circular(16.0),
@@ -762,22 +707,22 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                 ),
                                 options: FFButtonOptions(
                                   height: 50.0,
-                                  color: Color(0xFFE8F5EE),
-                                  iconColor: Color(0xFF1B5E20),
+                                  color: Color(0xFFF7F0EB),
+                                  iconColor: _accentColor,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: GoogleFonts.nunito(
                                           fontWeight: FontWeight.w600,
                                           fontStyle: FlutterFlowTheme.of(context)
                                               .titleSmall
                                               .fontStyle,
                                         ),
-                                        color: Color(0xFF1B5E20),
+                                        color: _accentColor,
                                         letterSpacing: 0.0,
                                       ),
                                   borderSide: BorderSide(
-                                    color: Color(0xFF7EC8A0),
+                                    color: _accentSoft,
                                     width: 1.0,
                                   ),
                                   borderRadius: BorderRadius.circular(14.0),
@@ -801,12 +746,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                 ),
                                 options: FFButtonOptions(
                                   height: 50.0,
-                                  color: Color(0xFF1B5E20),
+                                  color: _accentColor,
                                   iconColor: Colors.white,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: GoogleFonts.nunito(
                                           fontWeight: FontWeight.w600,
                                           fontStyle: FlutterFlowTheme.of(context)
                                               .titleSmall
@@ -854,14 +799,14 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   width: 32.0,
                                   height: 32.0,
                                   decoration: BoxDecoration(
-                                    color: Color(0xFFE8F5E9),
+                                    color: Color(0xFFF7F0EB),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Align(
                                     alignment: AlignmentDirectional(0.0, 0.0),
                                     child: Icon(
                                       Icons.tips_and_updates_rounded,
-                                      color: Color(0xFF1B5E20),
+                                      color: _accentColor,
                                       size: 18.0,
                                     ),
                                   ),
@@ -871,14 +816,14 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: GoogleFonts.nunito(
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .titleSmall
                                                   .fontStyle,
                                         ),
-                                        color: Color(0xFF1B5E20),
+                                        color: Color(0xFF1F2332),
                                         fontSize: 15.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.bold,
@@ -901,7 +846,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   width: 6.0,
                                   height: 6.0,
                                   decoration: BoxDecoration(
-                                    color: Color(0xFF1B5E20),
+                                    color: _accentColor,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -910,7 +855,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.openSans(
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -935,7 +880,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   width: 6.0,
                                   height: 6.0,
                                   decoration: BoxDecoration(
-                                    color: Color(0xFF1B5E20),
+                                    color: _accentColor,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -946,7 +891,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.openSans(
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -971,7 +916,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   width: 6.0,
                                   height: 6.0,
                                   decoration: BoxDecoration(
-                                    color: Color(0xFF1B5E20),
+                                    color: _accentColor,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -980,7 +925,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.openSans(
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -1012,39 +957,39 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
           ),
         ),
         bottomNavigationBar: Container(
+          margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 14.0),
           decoration: BoxDecoration(
             color: Colors.white,
-            boxShadow: [
+            borderRadius: BorderRadius.circular(28.0),
+            boxShadow: const [
               BoxShadow(
-                blurRadius: 10.0,
-                color: Color(0x1A000000),
-                offset: Offset(0.0, -2.0),
+                blurRadius: 24.0,
+                color: Color(0x180F172A),
+                offset: Offset(0.0, 8.0),
               )
             ],
           ),
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(14.0, 10.0, 14.0, 10.0),
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
                   onTap: () async {
                     context.pushNamed(MainPageWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.home_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.home_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1053,22 +998,26 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                   ),
                 ),
                 InkWell(
-                  onTap: () async {
-                    // Already on ProductScanning
-                  },
+                  onTap: () async {},
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.qr_code_scanner_rounded,
-                        color: Color(0xFF1B5E20),
-                        size: 28.0,
+                      Container(
+                        width: 36.0,
+                        height: 36.0,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF2EBE5),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: const Icon(Icons.qr_code_scanner_rounded,
+                          color: Color(0xFFB78466), size: 22.0),
                       ),
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF1B5E20),
+                              color: const Color(0xFFB78466),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w600,
@@ -1081,19 +1030,17 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                   onTap: () async {
                     context.pushNamed(HealthInsightDashboardWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.insights_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.insights_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1105,19 +1052,17 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                   onTap: () async {
                     context.pushNamed(HistoryPageWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.history_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.history_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1129,19 +1074,17 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                   onTap: () async {
                     context.pushNamed(UserProfileWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.person_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.person_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),

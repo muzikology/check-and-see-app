@@ -98,6 +98,10 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveHeight = widget.options.height == null
+      ? null
+      : (widget.options.height! - 6.0).clamp(40.0, 120.0).toDouble();
+
     Widget textWidget = loading
         ? SizedBox(
             width: widget.options.width == null
@@ -148,12 +152,13 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
             widget.options.hoverBorderSide != null) {
           return RoundedRectangleBorder(
             borderRadius:
-                widget.options.borderRadius ?? BorderRadius.circular(8),
+                widget.options.borderRadius ?? BorderRadius.circular(18),
             side: widget.options.hoverBorderSide!,
           );
         }
         return RoundedRectangleBorder(
-          borderRadius: widget.options.borderRadius ?? BorderRadius.circular(8),
+          borderRadius:
+              widget.options.borderRadius ?? BorderRadius.circular(18),
           side: widget.options.borderSide ?? BorderSide.none,
         );
       }),
@@ -187,14 +192,14 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
       }),
       padding: WidgetStateProperty.all(
         widget.options.padding ??
-            const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+            const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
       ),
       elevation: WidgetStateProperty.resolveWith<double?>((states) {
         if (states.contains(WidgetState.hovered) &&
             widget.options.hoverElevation != null) {
           return widget.options.hoverElevation!;
         }
-        return widget.options.elevation ?? 2.0;
+        return widget.options.elevation ?? 0.8;
       }),
       iconColor: WidgetStateProperty.resolveWith<Color?>((states) {
         if (states.contains(WidgetState.disabled) &&
@@ -219,14 +224,14 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
 
       if (text == null) {
         return Container(
-          height: widget.options.height,
+          height: effectiveHeight,
           width: widget.options.width,
           decoration: BoxDecoration(
             border: Border.fromBorderSide(
               widget.options.borderSide ?? BorderSide.none,
             ),
             borderRadius:
-                widget.options.borderRadius ?? BorderRadius.circular(8),
+                widget.options.borderRadius ?? BorderRadius.circular(18),
           ),
           child: IconButton(
             splashRadius: 1.0,
@@ -241,7 +246,7 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
         );
       }
       return SizedBox(
-        height: widget.options.height,
+        height: effectiveHeight,
         width: widget.options.width,
         child: ElevatedButton.icon(
           icon: Padding(
@@ -258,7 +263,7 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
     }
 
     return SizedBox(
-      height: widget.options.height,
+      height: effectiveHeight,
       width: widget.options.width,
       child: ElevatedButton(
         onPressed: onPressed,
@@ -293,13 +298,47 @@ extension _WithoutColorExtension on TextStyle {
         decorationStyle: decorationStyle,
         decorationThickness: decorationThickness,
         debugLabel: debugLabel,
-        fontFamily: fontFamily,
+        fontFamily: _normalizeFontFamily(fontFamily),
         fontFamilyFallback: fontFamilyFallback,
         // The _package field is private so unfortunately we can't set it here,
         // but it's almost always unset anyway.
         // package: _package,
         overflow: overflow,
       );
+}
+
+String? _normalizeFontFamily(String? fontFamily) {
+  if (fontFamily == null) {
+    return null;
+  }
+
+  final normalized =
+      fontFamily.replaceAll(RegExp(r'[_-]+'), ' ').trim().toLowerCase();
+  final normalizedNoWeight = normalized.replaceAll(RegExp(r'\s\d{3}$'), '');
+  final strippedVariant = normalizedNoWeight
+      .replaceAll(
+        RegExp(
+          r'(\s+(thin|extralight|light|regular|medium|semibold|demibold|bold|extrabold|black|italic|oblique))+$',
+        ),
+        '',
+      )
+      .trim();
+  final squashed = strippedVariant.replaceAll(' ', '');
+
+  if (normalized.startsWith('inter tight')) {
+    return 'Nunito';
+  }
+  if (normalized.startsWith('inter')) {
+    return 'Open Sans';
+  }
+  if (squashed.startsWith('nunito')) {
+    return 'Nunito';
+  }
+  if (squashed.startsWith('opensans')) {
+    return 'Open Sans';
+  }
+
+  return fontFamily;
 }
 
 // Slightly hacky method of getting the layout width of the provided text.

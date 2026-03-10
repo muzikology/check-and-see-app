@@ -584,7 +584,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                             )
                           ],
                           gradient: LinearGradient(
-                            colors: [Color(0xFF7EC8A0), Color(0xFF4A9E7A)],
+                            colors: [Color(0xFFD1A98A), Color(0xFFB78466)],
                             stops: [0.0, 1.0],
                             begin: AlignmentDirectional(1.0, 1.0),
                             end: AlignmentDirectional(-1.0, -1.0),
@@ -726,8 +726,8 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                             24.0, 0.0, 24.0, 0.0),
                         iconPadding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        iconColor: Color(0xFF4A9E7A),
-                        color: Color(0xFFE8F5EE),
+                        iconColor: Color(0xFFB78466),
+                        color: Color(0xFFF7F0EB),
                         textStyle:
                             FlutterFlowTheme.of(context).titleSmall.override(
                                   font: GoogleFonts.interTight(
@@ -736,7 +736,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                                  color: Color(0xFF4A9E7A),
+                                  color: Color(0xFFB78466),
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w600,
                                   fontStyle: FlutterFlowTheme.of(context)
@@ -745,7 +745,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                 ),
                         elevation: 0.0,
                         borderSide: BorderSide(
-                          color: Color(0xFF7EC8A0),
+                          color: Color(0xFFD1A98A),
                           width: 1.0,
                         ),
                         borderRadius: BorderRadius.circular(24.0),
@@ -780,7 +780,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                             children: [
                               Icon(
                                 Icons.cloud_done_outlined,
-                                color: Color(0xFF4A9E7A),
+                                color: Color(0xFFB78466),
                                 size: 20.0,
                               ),
                               Text(
@@ -837,14 +837,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                 width: 36.0,
                                 height: 36.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFE8F5EE),
+                                  color: Color(0xFFF7F0EB),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Icon(
                                     Icons.spa_outlined,
-                                    color: Color(0xFF4A9E7A),
+                                    color: Color(0xFFB78466),
                                     size: 20.0,
                                   ),
                                 ),
@@ -919,7 +919,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                         _model.choiceChipsValue1 =
                                             val?.firstOrNull),
                                     selectedChipStyle: ChipStyle(
-                                      backgroundColor: Color(0xFF4A9E7A),
+                                      backgroundColor: Color(0xFFB78466),
                                       textStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
@@ -944,7 +944,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           EdgeInsetsDirectional.fromSTEB(
                                               14.0, 6.0, 14.0, 6.0),
                                       elevation: 0.0,
-                                      borderColor: Color(0xFF4A9E7A),
+                                      borderColor: Color(0xFFB78466),
                                       borderRadius: BorderRadius.circular(20.0),
                                     ),
                                     unselectedChipStyle: ChipStyle(
@@ -1360,7 +1360,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                             safeSetState(() => _model
                                                 .switchValue1 = newValue!);
                                           },
-                                          activeColor: Color(0xFF4A9E7A),
+                                          activeColor: Color(0xFFB78466),
                                           activeTrackColor: Color(0xFFB2DFCC),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
@@ -1427,7 +1427,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                             safeSetState(() => _model
                                                 .switchValue2 = newValue!);
                                           },
-                                          activeColor: Color(0xFF4A9E7A),
+                                          activeColor: Color(0xFFB78466),
                                           activeTrackColor: Color(0xFFB2DFCC),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
@@ -1494,7 +1494,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                             safeSetState(() => _model
                                                 .switchValue3 = newValue!);
                                           },
-                                          activeColor: Color(0xFF4A9E7A),
+                                          activeColor: Color(0xFFB78466),
                                           activeTrackColor: Color(0xFFB2DFCC),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
@@ -1561,7 +1561,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                             safeSetState(() => _model
                                                 .switchValue4 = newValue!);
                                           },
-                                          activeColor: Color(0xFF4A9E7A),
+                                          activeColor: Color(0xFFB78466),
                                           activeTrackColor: Color(0xFFB2DFCC),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
@@ -1889,8 +1889,8 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                             options: FFButtonOptions(
                               width: double.infinity,
                               height: 44.0,
-                              color: Color(0xFFE8F5EE),
-                              iconColor: Color(0xFF1B5E20),
+                              color: Color(0xFFF7F0EB),
+                              iconColor: Color(0xFF2F8F46),
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleSmall
                                   .override(
@@ -1900,11 +1900,11 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           .titleSmall
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF1B5E20),
+                                    color: Color(0xFF2F8F46),
                                     letterSpacing: 0.0,
                                   ),
                               borderSide: BorderSide(
-                                color: Color(0xFF7EC8A0),
+                                color: Color(0xFFD1A98A),
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
@@ -2085,14 +2085,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     children: [
                       Icon(
                         Icons.person_rounded,
-                        color: Color(0xFF1B5E20),
+                        color: Color(0xFF2F8F46),
                         size: 28.0,
                       ),
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF1B5E20),
+                              color: Color(0xFF2F8F46),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w600,
@@ -2109,3 +2109,4 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     );
   }
 }
+

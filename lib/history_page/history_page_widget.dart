@@ -169,9 +169,9 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF5F7F5),
+        backgroundColor: Color(0xFFF2F2F5),
         appBar: AppBar(
-          backgroundColor: Color(0xFF1B5E20),
+          backgroundColor: Color(0xFFF2F2F5),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -180,7 +180,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
             buttonSize: 60.0,
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: Colors.white,
+              color: Color(0xFF1F2332),
               size: 30.0,
             ),
             onPressed: () async {
@@ -191,14 +191,14 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
             'Scan History',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Inter Tight',
-                  color: Colors.white,
+                  color: Color(0xFF1F2332),
                   fontSize: 22.0,
                   letterSpacing: 0.0,
                 ),
           ),
           actions: [],
           centerTitle: true,
-          elevation: 2.0,
+          elevation: 0.0,
         ),
         body: SafeArea(
           top: true,
@@ -280,7 +280,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                             children: [
                               Icon(
                                 Icons.history_rounded,
-                                color: Color(0xFF1B5E20),
+                                color: Color(0xFF2F8F46),
                                 size: 80.0,
                               ),
                               Padding(
@@ -292,7 +292,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                       .headlineSmall
                                       .override(
                                         fontFamily: 'Inter Tight',
-                                        color: Color(0xFF1B5E20),
+                                        color: Color(0xFF2F8F46),
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -328,7 +328,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                         0.0, 0.0, 0.0, 0.0),
                                     iconPadding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 0.0, 0.0),
-                                    color: Color(0xFF1B5E20),
+                                    color: Color(0xFF2F8F46),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
@@ -360,13 +360,13 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                 final scoreBg = score >= 80
                                     ? Color(0xFFE8F5E9)
                                     : score >= 60
-                                        ? Color(0xFFF3E5F5)
-                                        : Color(0xFFFCE4EC);
+                                        ? Color(0xFFF7F0EB)
+                                        : Color(0xFFFCECEF);
                                 final scoreColor = score >= 80
-                                    ? Color(0xFF1B5E20)
+                                    ? Color(0xFF2F8F46)
                                     : score >= 60
-                                        ? Color(0xFF7B1FA2)
-                                        : Color(0xFFE91E63);
+                                        ? Color(0xFFB78466)
+                                        : Color(0xFFC24664);
                                 final firstIngredient =
                                   analysis.ingredients.isNotEmpty
                                     ? analysis.ingredients.first
@@ -478,13 +478,13 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                               final scoreBg = score >= 80
                                   ? Color(0xFFE8F5E9)
                                   : score >= 60
-                                      ? Color(0xFFF3E5F5)
-                                      : Color(0xFFFCE4EC);
+                                      ? Color(0xFFF7F0EB)
+                                      : Color(0xFFFCECEF);
                               final scoreColor = score >= 80
-                                  ? Color(0xFF1B5E20)
+                                  ? Color(0xFF2F8F46)
                                   : score >= 60
-                                      ? Color(0xFF7B1FA2)
-                                      : Color(0xFFE91E63);
+                                      ? Color(0xFFB78466)
+                                      : Color(0xFFC24664);
                               final firstIngredient = scan.ingredients
                                   .split(',')
                                   .map((e) => e.trim())

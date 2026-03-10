@@ -96,6 +96,17 @@ class _HealthInsightDashboardWidgetState
   }
 
   String _classifyCategory(ScansRecord scan) {
+    final normalizedType = scan.productType.trim().toLowerCase();
+    if (normalizedType == 'food') {
+      return 'food';
+    }
+    if (normalizedType == 'beauty') {
+      return 'beauty';
+    }
+    if (normalizedType == 'skincare') {
+      return 'skincare';
+    }
+
     final source = '${scan.productName} ${scan.ingredients}'.toLowerCase();
     const skincareKeywords = [
       'serum',
@@ -156,9 +167,9 @@ class _HealthInsightDashboardWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF5F7FA),
+        backgroundColor: Color(0xFFF2F2F5),
         appBar: AppBar(
-          backgroundColor: Color(0xFFF5F7FA),
+          backgroundColor: Color(0xFFF2F2F5),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -1627,39 +1638,38 @@ class _HealthInsightDashboardWidgetState
           ),
         ),
         bottomNavigationBar: Container(
+          margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 14.0),
           decoration: BoxDecoration(
             color: Colors.white,
-            boxShadow: [
+            borderRadius: BorderRadius.circular(28.0),
+            boxShadow: const [
               BoxShadow(
-                blurRadius: 10.0,
-                color: Color(0x1A000000),
-                offset: Offset(0.0, -2.0),
+                blurRadius: 24.0,
+                color: Color(0x180F172A),
+                offset: Offset(0.0, 8.0),
               )
             ],
           ),
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
+            padding: const EdgeInsetsDirectional.fromSTEB(14.0, 10.0, 14.0, 10.0),
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
                   onTap: () async {
                     context.pushNamed(MainPageWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.home_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.home_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1671,19 +1681,17 @@ class _HealthInsightDashboardWidgetState
                   onTap: () async {
                     context.pushNamed(ProductScanningWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.qr_code_scanner_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.qr_code_scanner_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1692,22 +1700,26 @@ class _HealthInsightDashboardWidgetState
                   ),
                 ),
                 InkWell(
-                  onTap: () async {
-                    // Already on HealthInsightDashboard
-                  },
+                  onTap: () async {},
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.insights_rounded,
-                        color: Color(0xFF1B5E20),
-                        size: 28.0,
+                      Container(
+                        width: 36.0,
+                        height: 36.0,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF7F0EB),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: const Icon(Icons.insights_rounded,
+                            color: Color(0xFFB78466), size: 22.0),
                       ),
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF1B5E20),
+                              color: const Color(0xFFB78466),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w600,
@@ -1720,19 +1732,17 @@ class _HealthInsightDashboardWidgetState
                   onTap: () async {
                     context.pushNamed(HistoryPageWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.history_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.history_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1744,19 +1754,17 @@ class _HealthInsightDashboardWidgetState
                   onTap: () async {
                     context.pushNamed(UserProfileWidget.routeName);
                   },
+                  borderRadius: BorderRadius.circular(18.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.person_rounded,
-                        color: Color(0xFF57636C),
-                        size: 28.0,
-                      ),
+                      const Icon(Icons.person_rounded,
+                          color: Color(0xFF667085), size: 22.0),
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),

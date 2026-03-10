@@ -38,6 +38,16 @@ class ScanAnalyzer {
       }
     }
 
+    if (!kIsWeb &&
+        productType == ScanProductType.beauty &&
+        imagePath != null &&
+        imagePath.trim().isNotEmpty) {
+      final localBeauty = await _analyzeBeautyFromLocalSignals(imagePath);
+      if (localBeauty != null) {
+        return _enrichByProductType(localBeauty, profile);
+      }
+    }
+
     ScanAnalysisResult initial;
 
     if (kIsWeb && !_useCloudOnWeb) {
@@ -69,9 +79,58 @@ class ScanAnalyzer {
     ProfilesRecord? profile,
   ) async {
     if (base.productType == ScanProductType.beauty) {
-      return _enrichBeautyAnalysis(base, profile);
+      final enrichedBeauty = await _enrichBeautyFromOnlineCatalog(base);
+      return _enrichBeautyAnalysis(enrichedBeauty, profile);
     }
     return _enrichFromOnlineCatalog(base, profile);
+  }
+
+  static Future<ScanAnalysisResult> _enrichBeautyFromOnlineCatalog(
+    ScanAnalysisResult base,
+  ) async {
+    final name = base.productName.trim();
+    if (name.isEmpty || name.toLowerCase() == 'unnamed product') {
+      return base;
+    }
+
+    final fetched = await _fetchBeautyCatalogByName(name);
+    if (fetched == null) {
+      return base;
+    }
+
+    final ingredientsFromCatalog = _splitIngredients(
+      _asString(
+        fetched['ingredients_text_en'] ?? fetched['ingredients_text'],
+        fallback: '',
+      ),
+    );
+    final ingredients =
+        ingredientsFromCatalog.isNotEmpty ? ingredientsFromCatalog : base.ingredients;
+
+    final catalogProductName = _normalizeProductName(
+      _asString(
+        fetched['product_name_en'] ?? fetched['product_name'],
+        fallback: '',
+      ),
+      _asString(fetched['brands'], fallback: ''),
+    );
+    final productName = catalogProductName.isNotEmpty ? catalogProductName : base.productName;
+    final brandName = _normalizeBrandName(
+      _asString(fetched['brands'], fallback: base.brandName),
+    );
+
+    return ScanAnalysisResult(
+      productType: ScanProductType.beauty,
+      productName: productName,
+      brandName: brandName,
+      healthScore: base.healthScore,
+      ingredients: ingredients,
+      warnings: base.warnings,
+      benefits: base.benefits,
+      recommendation: base.recommendation,
+      impactForUser: base.impactForUser,
+      persistedByBackend: base.persistedByBackend,
+    );
   }
 
   static ScanAnalysisResult _enrichBeautyAnalysis(
@@ -244,6 +303,31 @@ class ScanAnalyzer {
     return null;
   }
 
+  static Future<ScanAnalysisResult?> _analyzeBeautyFromLocalSignals(
+    String imagePath,
+  ) async {
+    try {
+      final barcode = await _scanBarcode(imagePath);
+      if (barcode != null) {
+        final fetched = await _fetchBeautyCatalogByBarcode(barcode);
+        if (fetched != null) {
+          return _buildBeautyResultFromCatalog(fetched);
+        }
+      }
+
+      final query = await _extractLikelyProductQuery(imagePath);
+      if (query != null && query.isNotEmpty) {
+        final fetched = await _fetchBeautyCatalogByName(query);
+        if (fetched != null) {
+          return _buildBeautyResultFromCatalog(fetched);
+        }
+      }
+    } catch (_) {
+      // Fall through to the existing cloud/fallback pipeline.
+    }
+    return null;
+  }
+
   static Future<String?> _scanBarcode(String imagePath) async {
     final scanner = BarcodeScanner(formats: [BarcodeFormat.all]);
     try {
@@ -291,6 +375,28 @@ class ScanAnalyzer {
   static Future<Map<String, dynamic>?> _fetchCatalogByBarcode(String barcode) async {
     try {
       final uri = Uri.https('world.openfoodfacts.org', '/api/v2/product/$barcode.json');
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        return null;
+      }
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final product = data['product'];
+      if (product is Map<String, dynamic>) {
+        return product;
+      }
+      if (product is Map) {
+        return Map<String, dynamic>.from(product);
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> _fetchBeautyCatalogByBarcode(String barcode) async {
+    try {
+      final uri =
+          Uri.https('world.openbeautyfacts.org', '/api/v2/product/$barcode.json');
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
       if (response.statusCode < 200 || response.statusCode >= 300) {
         return null;
@@ -384,6 +490,39 @@ class ScanAnalyzer {
     );
   }
 
+  static ScanAnalysisResult _buildBeautyResultFromCatalog(
+    Map<String, dynamic> fetched,
+  ) {
+    final ingredients = _splitIngredients(
+      _asString(
+        fetched['ingredients_text_en'] ?? fetched['ingredients_text'],
+        fallback: '',
+      ),
+    );
+
+    return ScanAnalysisResult(
+      productType: ScanProductType.beauty,
+      productName: _normalizeProductName(
+        _asString(
+          fetched['product_name_en'] ?? fetched['product_name'],
+          fallback: '',
+        ),
+        _asString(fetched['brands'], fallback: ''),
+      ),
+      brandName: _normalizeBrandName(
+        _asString(fetched['brands'], fallback: ''),
+      ),
+      healthScore: 72,
+      ingredients: ingredients,
+      warnings: const [],
+      benefits: const [],
+      recommendation:
+          'Beauty profile detected. Verify ingredient compatibility with your skin type.',
+      impactForUser: '',
+      persistedByBackend: false,
+    );
+  }
+
   static Future<ScanAnalysisResult> _ensureProductNameFromLabel(
     ScanAnalysisResult base,
     Uint8List imageBytes,
@@ -423,6 +562,32 @@ class ScanAnalyzer {
   static Future<Map<String, dynamic>?> _fetchCatalogByName(String productName) async {
     try {
       final uri = Uri.https('world.openfoodfacts.org', '/cgi/search.pl', {
+        'search_terms': productName,
+        'search_simple': '1',
+        'action': 'process',
+        'json': '1',
+        'page_size': '1',
+      });
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        return null;
+      }
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final products = data['products'];
+      if (products is List && products.isNotEmpty && products.first is Map) {
+        return Map<String, dynamic>.from(products.first as Map);
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> _fetchBeautyCatalogByName(
+    String productName,
+  ) async {
+    try {
+      final uri = Uri.https('world.openbeautyfacts.org', '/cgi/search.pl', {
         'search_terms': productName,
         'search_simple': '1',
         'action': 'process',

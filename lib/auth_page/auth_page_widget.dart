@@ -59,7 +59,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
   }) => InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Color(0xFF4A5568)),
-        floatingLabelStyle: const TextStyle(color: Color(0xFF1B5E20)),
+        floatingLabelStyle: const TextStyle(color: Color(0xFF2F8F46)),
         hintStyle: const TextStyle(color: Color(0xFF6B7280)),
         suffixIcon: suffixIcon,
         filled: true,
@@ -74,7 +74,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide(color: const Color(0xFF1B5E20), width: 1.2),
+          borderSide: BorderSide(color: const Color(0xFF2F8F46), width: 1.2),
         ),
       );
 
@@ -172,7 +172,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7F5),
+        backgroundColor: const Color(0xFFF2F2F5),
         body: SafeArea(
           top: true,
           child: LayoutBuilder(
@@ -215,8 +215,8 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                     const SizedBox(height: 12),
                     TabBar(
                       controller: _tabController,
-                      indicatorColor: const Color(0xFF1B5E20),
-                      labelColor: const Color(0xFF1B5E20),
+                      indicatorColor: const Color(0xFF2F8F46),
+                      labelColor: const Color(0xFF2F8F46),
                       unselectedLabelColor: const Color(0xFF718096),
                       tabs: const [
                         Tab(text: 'Sign In'),
@@ -237,7 +237,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   controller: _signInEmailController,
                                   decoration: _fieldDecoration('Email'),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF1B5E20),
+                                  cursorColor: const Color(0xFF2F8F46),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) => (value == null ||
                                           value.trim().isEmpty ||
@@ -263,7 +263,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                     ),
                                   ),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF1B5E20),
+                                  cursorColor: const Color(0xFF2F8F46),
                                   obscuringCharacter: '•',
                                   obscureText: !_showSignInPassword,
                                   validator: (value) =>
@@ -278,7 +278,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   options: FFButtonOptions(
                                     width: double.infinity,
                                     height: 48,
-                                    color: const Color(0xFF1B5E20),
+                                    color: const Color(0xFF2F8F46),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
@@ -305,7 +305,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   controller: _signUpNameController,
                                   decoration: _fieldDecoration('Full Name'),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF1B5E20),
+                                  cursorColor: const Color(0xFF2F8F46),
                                   validator: (value) => (value == null ||
                                           value.trim().length < 2)
                                       ? 'Enter your name.'
@@ -316,7 +316,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   controller: _signUpEmailController,
                                   decoration: _fieldDecoration('Email'),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF1B5E20),
+                                  cursorColor: const Color(0xFF2F8F46),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) => (value == null ||
                                           value.trim().isEmpty ||
@@ -342,7 +342,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                     ),
                                   ),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF1B5E20),
+                                  cursorColor: const Color(0xFF2F8F46),
                                   obscuringCharacter: '•',
                                   obscureText: !_showSignUpPassword,
                                   validator: (value) =>
@@ -416,7 +416,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   options: FFButtonOptions(
                                     width: double.infinity,
                                     height: 48,
-                                    color: const Color(0xFF1B5E20),
+                                    color: const Color(0xFF2F8F46),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
