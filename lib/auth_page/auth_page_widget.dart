@@ -32,6 +32,8 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
   String _skinType = 'Combination';
   String _dietType = 'Regular';
   String _goal = 'General Health';
+  bool _showSignInPassword = false;
+  bool _showSignUpPassword = false;
   bool _saving = false;
 
   @override
@@ -51,9 +53,15 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
     super.dispose();
   }
 
-  InputDecoration _fieldDecoration(String label) => InputDecoration(
+  InputDecoration _fieldDecoration(
+    String label, {
+    Widget? suffixIcon,
+  }) => InputDecoration(
         labelText: label,
-      labelStyle: const TextStyle(color: Color(0xFF4A5568)),
+        labelStyle: const TextStyle(color: Color(0xFF4A5568)),
+        floatingLabelStyle: const TextStyle(color: Color(0xFF1B5E20)),
+        hintStyle: const TextStyle(color: Color(0xFF6B7280)),
+        suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(
@@ -240,11 +248,24 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                 const SizedBox(height: 12),
                                 TextFormField(
                                   controller: _signInPasswordController,
-                                  decoration: _fieldDecoration('Password'),
+                                  decoration: _fieldDecoration(
+                                    'Password',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _showSignInPassword
+                                            ? Icons.visibility_off_outlined
+                                            : Icons.visibility_outlined,
+                                        color: const Color(0xFF4A5568),
+                                      ),
+                                      onPressed: () => safeSetState(
+                                        () => _showSignInPassword = !_showSignInPassword,
+                                      ),
+                                    ),
+                                  ),
                                   style: _inputTextStyle,
                                   cursorColor: const Color(0xFF1B5E20),
                                   obscuringCharacter: '•',
-                                  obscureText: true,
+                                  obscureText: !_showSignInPassword,
                                   validator: (value) =>
                                       (value == null || value.length < 6)
                                           ? 'Password must be at least 6 characters.'
@@ -306,11 +327,24 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                 const SizedBox(height: 10),
                                 TextFormField(
                                   controller: _signUpPasswordController,
-                                  decoration: _fieldDecoration('Password'),
+                                  decoration: _fieldDecoration(
+                                    'Password',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _showSignUpPassword
+                                            ? Icons.visibility_off_outlined
+                                            : Icons.visibility_outlined,
+                                        color: const Color(0xFF4A5568),
+                                      ),
+                                      onPressed: () => safeSetState(
+                                        () => _showSignUpPassword = !_showSignUpPassword,
+                                      ),
+                                    ),
+                                  ),
                                   style: _inputTextStyle,
                                   cursorColor: const Color(0xFF1B5E20),
                                   obscuringCharacter: '•',
-                                  obscureText: true,
+                                  obscureText: !_showSignUpPassword,
                                   validator: (value) =>
                                       (value == null || value.length < 6)
                                           ? 'Password must be at least 6 characters.'
