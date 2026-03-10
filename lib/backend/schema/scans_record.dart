@@ -36,6 +36,11 @@ class ScansRecord extends FirestoreRecord {
   String get brandName => _brandName ?? '';
   bool hasBrandName() => _brandName != null;
 
+  // "product_type" field.
+  String? _productType;
+  String get productType => _productType ?? 'food';
+  bool hasProductType() => _productType != null;
+
   // "ingredients" field.
   String? _ingredients;
   String get ingredients => _ingredients ?? '';
@@ -111,6 +116,7 @@ class ScansRecord extends FirestoreRecord {
     _productImage = snapshotData['product_image'] as String?;
     _productName = snapshotData['product_name'] as String?;
     _brandName = snapshotData['brand_name'] as String?;
+    _productType = snapshotData['product_type'] as String?;
     _ingredients = snapshotData['ingredients'] as String?;
     _warnings = getDataList(snapshotData['warnings']);
     _benefits = getDataList(snapshotData['benefits']);
@@ -165,6 +171,7 @@ Map<String, dynamic> createScansRecordData({
   String? productImage,
   String? productName,
   String? brandName,
+  String? productType,
   String? ingredients,
   List<String>? warnings,
   List<String>? benefits,
@@ -186,6 +193,7 @@ Map<String, dynamic> createScansRecordData({
       'product_image': productImage,
       'product_name': productName,
       'brand_name': brandName,
+      'product_type': productType,
       'ingredients': ingredients,
       'warnings': warnings,
       'benefits': benefits,
@@ -215,6 +223,7 @@ class ScansRecordDocumentEquality implements Equality<ScansRecord> {
         e1?.productImage == e2?.productImage &&
       e1?.productName == e2?.productName &&
       e1?.brandName == e2?.brandName &&
+        e1?.productType == e2?.productType &&
         e1?.ingredients == e2?.ingredients &&
       const ListEquality().equals(e1?.warnings, e2?.warnings) &&
       const ListEquality().equals(e1?.benefits, e2?.benefits) &&
@@ -237,6 +246,7 @@ class ScansRecordDocumentEquality implements Equality<ScansRecord> {
         e?.productImage,
         e?.productName,
         e?.brandName,
+        e?.productType,
         e?.ingredients,
         e?.warnings,
         e?.benefits,

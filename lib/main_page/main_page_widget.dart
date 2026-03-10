@@ -228,6 +228,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
   Future<void> _openScanInAnalysis(ScansRecord scan) async {
     final score = (int.tryParse(scan.healthScore.trim()) ?? 70).clamp(1, 100);
     final analysis = ScanAnalysisResult(
+      productType: ScanProductTypeX.fromStorageValue(scan.productType),
       productName: _productLabel(scan),
       brandName: _brandLabel(scan),
       healthScore: score,

@@ -241,6 +241,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
           ? latest.brandName.trim()
           : '';
       final analysis = ScanAnalysisResult(
+        productType: ScanProductTypeX.fromStorageValue(latest.productType),
         productName: productName,
         brandName: brandName,
         healthScore: score.clamp(1, 100),

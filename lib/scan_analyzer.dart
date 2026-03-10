@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:http/http.dart' as http;
 
 import '/auth/firebase_auth/auth_util.dart';
@@ -22,29 +24,99 @@ class ScanAnalyzer {
 
   static Future<ScanAnalysisResult> analyze({
     required Uint8List imageBytes,
+    String? imagePath,
+    required ScanProductType productType,
     ProfilesRecord? profile,
   }) async {
+    if (!kIsWeb &&
+        productType == ScanProductType.food &&
+        imagePath != null &&
+        imagePath.trim().isNotEmpty) {
+      final localFood = await _analyzeFoodFromLocalSignals(imagePath, profile);
+      if (localFood != null) {
+        return _enrichByProductType(localFood, profile);
+      }
+    }
+
     ScanAnalysisResult initial;
 
     if (kIsWeb && !_useCloudOnWeb) {
-      initial = await _fallbackWithLabelName(imageBytes, profile);
-      return _enrichFromOnlineCatalog(initial, profile);
+      initial = await _fallbackWithLabelName(imageBytes, profile, productType);
+      return _enrichByProductType(initial, profile);
     }
 
     if (!loggedIn || currentJwtToken.trim().isEmpty) {
-      initial = await _fallbackWithLabelName(imageBytes, profile);
-      return _enrichFromOnlineCatalog(initial, profile);
+      initial = await _fallbackWithLabelName(imageBytes, profile, productType);
+      return _enrichByProductType(initial, profile);
     }
 
     try {
-        initial = await _analyzeWithCloudFunction(
-          imageBytes: imageBytes, profile: profile);
-        initial = await _ensureProductNameFromLabel(initial, imageBytes);
-      return _enrichFromOnlineCatalog(initial, profile);
+      initial = await _analyzeWithCloudFunction(
+        imageBytes: imageBytes,
+        profile: profile,
+        productType: productType,
+      );
+      initial = await _ensureProductNameFromLabel(initial, imageBytes);
+      return _enrichByProductType(initial, profile);
     } catch (_) {
-      initial = await _fallbackWithLabelName(imageBytes, profile);
-      return _enrichFromOnlineCatalog(initial, profile);
+      initial = await _fallbackWithLabelName(imageBytes, profile, productType);
+      return _enrichByProductType(initial, profile);
     }
+  }
+
+  static Future<ScanAnalysisResult> _enrichByProductType(
+    ScanAnalysisResult base,
+    ProfilesRecord? profile,
+  ) async {
+    if (base.productType == ScanProductType.beauty) {
+      return _enrichBeautyAnalysis(base, profile);
+    }
+    return _enrichFromOnlineCatalog(base, profile);
+  }
+
+  static ScanAnalysisResult _enrichBeautyAnalysis(
+    ScanAnalysisResult base,
+    ProfilesRecord? profile,
+  ) {
+    final skinType = _asString(profile?.skinType, fallback: 'Unknown skin type');
+    final allergies = _asString(profile?.allergies, fallback: '').toLowerCase();
+    final source =
+        '${base.productName} ${base.brandName} ${base.ingredients.join(' ')}'.toLowerCase();
+
+    final primaryAllergyToken = allergies
+        .split(RegExp(r',|;'))
+        .map((e) => e.trim())
+        .firstWhere((e) => e.isNotEmpty, orElse: () => '');
+
+    final warnings = <String>[
+      if (primaryAllergyToken.isNotEmpty && source.contains(primaryAllergyToken))
+        'Potential match with your allergy notes',
+      if (source.contains('fragrance') || source.contains('parfum'))
+        'Contains fragrance, patch test recommended',
+      if (source.contains('alcohol denat'))
+        'May feel drying for sensitive skin',
+    ];
+
+    final benefits = <String>[
+      if (source.contains('hyaluronic')) 'Hydration-supporting ingredient detected',
+      if (source.contains('niacinamide')) 'Barrier-support ingredient detected',
+      'Best evaluated against your $skinType profile',
+    ];
+
+    return ScanAnalysisResult(
+      productType: ScanProductType.beauty,
+      productName: base.productName,
+      brandName: base.brandName,
+      healthScore: base.healthScore,
+      ingredients: base.ingredients,
+      warnings: (warnings.isNotEmpty ? warnings : base.warnings).take(3).toList(),
+      benefits: (benefits.isNotEmpty ? benefits : base.benefits).take(3).toList(),
+      recommendation:
+          'Beauty mode: verify shade and finish with try-on, then patch-test before full-face use.',
+      impactForUser:
+          'For $skinType, prioritize non-comedogenic options and avoid known irritants from your profile.',
+      persistedByBackend: base.persistedByBackend,
+    );
   }
 
   static Future<ScanAnalysisResult> _enrichFromOnlineCatalog(
@@ -133,6 +205,7 @@ class ScanAnalyzer {
     );
 
     return ScanAnalysisResult(
+      productType: base.productType,
       productName: productName,
       brandName: brandName,
       healthScore: score,
@@ -142,6 +215,172 @@ class ScanAnalyzer {
       recommendation: recommendation,
       impactForUser: impactForUser,
       persistedByBackend: base.persistedByBackend,
+    );
+  }
+
+  static Future<ScanAnalysisResult?> _analyzeFoodFromLocalSignals(
+    String imagePath,
+    ProfilesRecord? profile,
+  ) async {
+    try {
+      final barcode = await _scanBarcode(imagePath);
+      if (barcode != null) {
+        final fetched = await _fetchCatalogByBarcode(barcode);
+        if (fetched != null) {
+          return _buildFoodResultFromCatalog(fetched, profile);
+        }
+      }
+
+      final query = await _extractLikelyProductQuery(imagePath);
+      if (query != null && query.isNotEmpty) {
+        final fetched = await _fetchCatalogByName(query);
+        if (fetched != null) {
+          return _buildFoodResultFromCatalog(fetched, profile);
+        }
+      }
+    } catch (_) {
+      // Fall through to the existing cloud/fallback pipeline.
+    }
+    return null;
+  }
+
+  static Future<String?> _scanBarcode(String imagePath) async {
+    final scanner = BarcodeScanner(formats: [BarcodeFormat.all]);
+    try {
+      final inputImage = InputImage.fromFilePath(imagePath);
+      final barcodes = await scanner.processImage(inputImage);
+      for (final barcode in barcodes) {
+        final raw = barcode.rawValue?.trim();
+          if (raw != null && raw.isNotEmpty && RegExp(r'^\d{8,14}$').hasMatch(raw)) {
+          return raw;
+        }
+      }
+      return null;
+    } finally {
+      await scanner.close();
+    }
+  }
+
+  static Future<String?> _extractLikelyProductQuery(String imagePath) async {
+    final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    try {
+      final inputImage = InputImage.fromFilePath(imagePath);
+      final text = await recognizer.processImage(inputImage);
+      final candidates = text.text
+          .split(RegExp(r'[\n\r]+'))
+          .map((e) => e.trim())
+          .where((e) => e.length >= 3)
+          .where((e) => RegExp(r'[A-Za-z]').hasMatch(e))
+          .where((e) => !e.toLowerCase().contains('ingredients'))
+          .where((e) => !e.toLowerCase().contains('nutrition'))
+          .toList();
+
+      for (final line in candidates) {
+        final compact = line.replaceAll(RegExp(r'\s+'), ' ').trim();
+        final words = compact.split(' ');
+        if (words.length >= 1 && words.length <= 6 && compact.length <= 48) {
+          return compact;
+        }
+      }
+      return null;
+    } finally {
+      await recognizer.close();
+    }
+  }
+
+  static Future<Map<String, dynamic>?> _fetchCatalogByBarcode(String barcode) async {
+    try {
+      final uri = Uri.https('world.openfoodfacts.org', '/api/v2/product/$barcode.json');
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        return null;
+      }
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final product = data['product'];
+      if (product is Map<String, dynamic>) {
+        return product;
+      }
+      if (product is Map) {
+        return Map<String, dynamic>.from(product);
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static ScanAnalysisResult _buildFoodResultFromCatalog(
+    Map<String, dynamic> fetched,
+    ProfilesRecord? profile,
+  ) {
+    final ingredients = _splitIngredients(
+      _asString(
+        fetched['ingredients_text_en'] ?? fetched['ingredients_text'],
+        fallback: '',
+      ),
+    );
+    final sugars = _asDouble(fetched['nutriments']?['sugars_100g']);
+    final salt = _asDouble(fetched['nutriments']?['salt_100g']);
+    final saturatedFat = _asDouble(fetched['nutriments']?['saturated-fat_100g']);
+    final fiber = _asDouble(fetched['nutriments']?['fiber_100g']);
+    final protein = _asDouble(fetched['nutriments']?['proteins_100g']);
+    final kcal = _asDouble(
+      fetched['nutriments']?['energy-kcal_100g'] ??
+          fetched['nutriments']?['energy-kcal_value'],
+    );
+
+    final score = _deriveHealthScore(
+      currentScore: 74,
+      sugars: sugars,
+      salt: salt,
+      saturatedFat: saturatedFat,
+      fiber: fiber,
+      protein: protein,
+      kcal: kcal,
+    );
+
+    return ScanAnalysisResult(
+      productType: ScanProductType.food,
+      productName: _normalizeProductName(
+        _asString(fetched['product_name'], fallback: ''),
+        _asString(fetched['brands'], fallback: ''),
+      ),
+      brandName: _normalizeBrandName(
+        _asString(fetched['brands'], fallback: ''),
+      ),
+      healthScore: score,
+      ingredients: ingredients,
+      warnings: _buildWarningsFromNutrition(
+        baseWarnings: const [],
+        sugars: sugars,
+        salt: salt,
+        saturatedFat: saturatedFat,
+        ingredients: ingredients,
+      ),
+      benefits: _buildBenefitsFromNutrition(
+        baseBenefits: const [],
+        fiber: fiber,
+        protein: protein,
+        ingredients: ingredients,
+      ),
+      recommendation: _buildRecommendationFromNutrition(
+        score: score,
+        sugars: sugars,
+        salt: salt,
+        saturatedFat: saturatedFat,
+        fiber: fiber,
+        protein: protein,
+        kcal: kcal,
+        fallback: 'Nutrition profile detected. Use in moderation.',
+      ),
+      impactForUser: _buildImpactForProfile(
+        profile: profile,
+        ingredients: ingredients,
+        sugars: sugars,
+        salt: salt,
+        fallback: '',
+      ),
+      persistedByBackend: false,
     );
   }
 
@@ -168,6 +407,7 @@ class ScanAnalyzer {
       return base;
     }
     return ScanAnalysisResult(
+      productType: base.productType,
       productName: productName.isNotEmpty ? productName : base.productName,
       brandName: brandName,
       healthScore: base.healthScore,
@@ -377,11 +617,13 @@ class ScanAnalyzer {
   static Future<ScanAnalysisResult> _fallbackWithLabelName(
     Uint8List bytes,
     ProfilesRecord? profile,
+    ScanProductType productType,
   ) async {
     final extracted = await _extractProductFromLabel(bytes);
     return _fallback(
       bytes,
       profile,
+      productType: productType,
       extractedProductName: extracted?['productName'],
       extractedBrandName: extracted?['brandName'],
     );
@@ -390,6 +632,7 @@ class ScanAnalyzer {
   static Future<ScanAnalysisResult> _analyzeWithCloudFunction({
     required Uint8List imageBytes,
     ProfilesRecord? profile,
+    required ScanProductType productType,
   }) async {
     final imageDataUrl = 'data:image/jpeg;base64,${base64Encode(imageBytes)}';
 
@@ -400,6 +643,7 @@ class ScanAnalyzer {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
+        'productType': productType.storageValue,
         'imageDataUrl': imageDataUrl,
         'profile': {
           'weightGoal': profile?.weightGoal ?? 'General Health',
@@ -420,6 +664,9 @@ class ScanAnalyzer {
     final score = _asInt(parsed['healthScore'], fallback: 70).clamp(1, 100);
 
     return ScanAnalysisResult(
+      productType: ScanProductTypeX.fromStorageValue(
+        _asString(parsed['productType'], fallback: productType.storageValue),
+      ),
       productName: _normalizeProductName(
         _asString(parsed['productName'], fallback: ''),
         _asString(parsed['brandName'], fallback: ''),
@@ -439,6 +686,7 @@ class ScanAnalyzer {
   static ScanAnalysisResult _fallback(
     Uint8List bytes,
     ProfilesRecord? profile, {
+    required ScanProductType productType,
     String? extractedProductName,
     String? extractedBrandName,
   }) {
@@ -460,6 +708,7 @@ class ScanAnalyzer {
         : 'Unknown';
 
     return ScanAnalysisResult(
+      productType: productType,
       productName:
         (extractedProductName?.trim().isNotEmpty ?? false)
           ? extractedProductName!.trim()

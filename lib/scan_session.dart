@@ -1,7 +1,25 @@
 import 'dart:typed_data';
 
+enum ScanProductType {
+  food,
+  beauty,
+}
+
+extension ScanProductTypeX on ScanProductType {
+  String get storageValue => this == ScanProductType.food ? 'food' : 'beauty';
+
+  String get label => this == ScanProductType.food ? 'Food products' : 'Beauty products';
+
+  static ScanProductType fromStorageValue(String value) {
+    return value.trim().toLowerCase() == 'beauty'
+        ? ScanProductType.beauty
+        : ScanProductType.food;
+  }
+}
+
 class ScanAnalysisResult {
   const ScanAnalysisResult({
+    required this.productType,
     required this.productName,
     required this.brandName,
     required this.healthScore,
@@ -13,6 +31,7 @@ class ScanAnalysisResult {
     this.persistedByBackend = false,
   });
 
+  final ScanProductType productType;
   final String productName;
   final String brandName;
   final int healthScore;
@@ -29,6 +48,11 @@ class ScanSession {
   static Uint8List? imageBytes;
   static DateTime? scannedAt;
   static ScanAnalysisResult? latestAnalysis;
+  static ScanProductType selectedProductType = ScanProductType.food;
+
+  static void setProductType(ScanProductType type) {
+    selectedProductType = type;
+  }
 
   static void updateScan(Uint8List bytes) {
     imageBytes = bytes;
@@ -102,4 +126,7 @@ class ScanSession {
     }
     return 'Lower score detected. Review additives and sugar levels.';
   }
+
+  static ScanProductType get productType =>
+      latestAnalysis?.productType ?? selectedProductType;
 }

@@ -79,7 +79,13 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final ImagePicker _imagePicker = ImagePicker();
   Uint8List? _selectedImageBytes;
+  String? _selectedImagePath;
   bool _isAnalyzing = false;
+  ScanProductType _selectedProductType = ScanSession.productType;
+
+  String get _scanLabel => _selectedProductType == ScanProductType.food
+      ? 'Align food product label within frame'
+      : 'Align beauty product label within frame';
 
   String _bytesToDataUrl(Uint8List bytes) =>
       'data:image/jpeg;base64,${base64Encode(bytes)}';
@@ -96,6 +102,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
         productImage: _bytesToDataUrl(imageBytes),
         productName: result.productName,
         brandName: result.brandName,
+        productType: result.productType.storageValue,
         ingredients: result.ingredients.join(', '),
         warnings: result.warnings,
         benefits: result.benefits,
@@ -141,8 +148,11 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
 
       final analysis = await ScanAnalyzer.analyze(
         imageBytes: imageBytes,
+        imagePath: _selectedImagePath,
+        productType: _selectedProductType,
         profile: profile,
       );
+      ScanSession.setProductType(_selectedProductType);
       ScanSession.updateAnalysis(imageBytes, analysis);
       if (!analysis.persistedByBackend) {
         await _saveScanRecord(analysis);
@@ -246,7 +256,11 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
       }
 
       final imageBytes = await pickedFile.readAsBytes();
-      safeSetState(() => _selectedImageBytes = imageBytes);
+      safeSetState(() {
+        _selectedImageBytes = imageBytes;
+        _selectedImagePath = pickedFile.path;
+      });
+      ScanSession.setProductType(_selectedProductType);
       ScanSession.updateScan(imageBytes);
 
       if (!mounted) return;
@@ -353,6 +367,85 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE8F5EE),
+                      borderRadius: BorderRadius.circular(14.0),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: FFButtonWidget(
+                            onPressed: () {
+                              safeSetState(
+                                () => _selectedProductType = ScanProductType.food,
+                              );
+                              ScanSession.setProductType(ScanProductType.food);
+                            },
+                            text: 'Food products',
+                            options: FFButtonOptions(
+                              height: 42.0,
+                              color: _selectedProductType == ScanProductType.food
+                                  ? const Color(0xFF1B5E20)
+                                  : Colors.transparent,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w600,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: _selectedProductType == ScanProductType.food
+                                        ? Colors.white
+                                        : const Color(0xFF1B5E20),
+                                    letterSpacing: 0.0,
+                                  ),
+                              elevation: 0.0,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          child: FFButtonWidget(
+                            onPressed: () {
+                              safeSetState(
+                                () => _selectedProductType = ScanProductType.beauty,
+                              );
+                              ScanSession.setProductType(ScanProductType.beauty);
+                            },
+                            text: 'Beauty products',
+                            options: FFButtonOptions(
+                              height: 42.0,
+                              color: _selectedProductType == ScanProductType.beauty
+                                  ? const Color(0xFF1B5E20)
+                                  : Colors.transparent,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w600,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: _selectedProductType == ScanProductType.beauty
+                                        ? Colors.white
+                                        : const Color(0xFF1B5E20),
+                                    letterSpacing: 0.0,
+                                  ),
+                              elevation: 0.0,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(28.0),
                     child: Container(
@@ -531,7 +624,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                     ),
                                   ),
                                   Text(
-                                    'Align product label within frame',
+                                    _scanLabel,
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
@@ -567,7 +660,9 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                         onPressed: () async {
                           await _showCameraModeOptions();
                         },
-                        text: 'Scan Product',
+                        text: _selectedProductType == ScanProductType.food
+                            ? 'Scan Food Product'
+                            : 'Scan Beauty Product',
                         icon: Icon(
                           Icons.qr_code_scanner_rounded,
                           size: 20.0,
@@ -609,7 +704,9 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                         onPressed: () async {
                           await _pickScanImage(ImageSource.gallery);
                         },
-                        text: 'Upload Photo',
+                        text: _selectedProductType == ScanProductType.food
+                            ? 'Upload Food Photo'
+                            : 'Upload Beauty Photo',
                         icon: Icon(
                           Icons.upload_file_rounded,
                           size: 20.0,
@@ -843,7 +940,9 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   ),
                                 ),
                                 Text(
-                                  'Capture full ingredient list',
+                                  _selectedProductType == ScanProductType.food
+                                      ? 'Capture full ingredient list'
+                                      : 'Capture full product front and label',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
