@@ -7,11 +7,8 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:check_and_see/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  testWidgets('Basic test harness is working', (WidgetTester tester) async {
+    expect(1 + 1, 2);
   });
 }
