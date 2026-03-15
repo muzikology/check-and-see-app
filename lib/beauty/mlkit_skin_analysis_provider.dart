@@ -38,7 +38,7 @@ class MlKitSkinAnalysisProvider implements SkinAnalysisProvider {
 
   Future<BeautySkinProfile> _analyzeWithMlKit(Uint8List imageBytes) async {
     final detector = FaceDetector(
-      options: const FaceDetectorOptions(
+      options: FaceDetectorOptions(
         enableContours: true,
         enableLandmarks: true,
         performanceMode: FaceDetectorMode.accurate,
@@ -93,7 +93,7 @@ class MlKitSkinAnalysisProvider implements SkinAnalysisProvider {
 
   Future<({int r, int g, int b})> _sampleSkinColor(
     ui.Image image,
-    Rect faceBounds,
+    ui.Rect faceBounds,
   ) async {
     final byteData =
         await image.toByteData(format: ui.ImageByteFormat.rawRgba);
