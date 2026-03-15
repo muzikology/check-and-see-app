@@ -16,7 +16,6 @@ import 'index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Sora and Plus Jakarta Sans are applied through the shared theme layer.
   // Allow runtime fetching on web unless all required font files are bundled.
   GoogleFonts.config.allowRuntimeFetching = true;
   GoRouter.optionURLReflectsImperativeAPIs = true;
@@ -112,35 +111,81 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: false,
-        fontFamily: GoogleFonts.openSans().fontFamily,
-        textTheme: GoogleFonts.openSansTextTheme(),
-        scaffoldBackgroundColor: const Color(0xFFF2F2F5),
-        cardColor: const Color(0xFFFFFFFF),
+        fontFamily: 'Poppins',
+        primaryColor: const Color(0xFF5C4033),
+        textTheme: const TextTheme(
+          headlineLarge: TextStyle(
+            fontFamily: 'Times New Roman MT',
+            fontSize: 32,
+            color: Color(0xFF3B2F2F),
+            fontWeight: FontWeight.w700,
+          ),
+          headlineMedium: TextStyle(
+            fontFamily: 'Times New Roman MT',
+            fontSize: 24,
+            color: Color(0xFF3B2F2F),
+            fontWeight: FontWeight.w700,
+          ),
+          titleLarge: TextStyle(
+            fontFamily: 'Perandory SemiCondensed',
+            fontSize: 20,
+            color: Color(0xFF5C4033),
+            fontWeight: FontWeight.w600,
+          ),
+          titleMedium: TextStyle(
+            fontFamily: 'Perandory SemiCondensed',
+            fontSize: 18,
+            color: Color(0xFF5C4033),
+            fontWeight: FontWeight.w600,
+          ),
+          bodyLarge: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+            color: Color(0xFF3B2F2F),
+          ),
+          bodyMedium: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 14,
+            color: Color(0xFF3B2F2F),
+          ),
+          labelSmall: TextStyle(
+            fontFamily: 'Sloop Script Pro',
+            fontSize: 14,
+            color: Color(0xFFC8A97E),
+          ),
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF5F0E6),
+        cardColor: const Color(0xFFEDE3D1),
+        cardTheme: const CardThemeData(
+          color: Color(0xFFEDE3D1),
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Color(0xFFC8A97E)),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFF2F2F5),
-          foregroundColor: Color(0xFF1F2332),
+          backgroundColor: Color(0xFFF5F0E6),
+          foregroundColor: Color(0xFF3B2F2F),
           elevation: 0,
           surfaceTintColor: Colors.transparent,
         ),
         colorScheme: const ColorScheme.light(
-          primary: Color(0xFF2F8F46),
-          secondary: Color(0xFFB78466),
-          surface: Color(0xFFF2F2F5),
+          primary: Color(0xFF5C4033),
+          secondary: Color(0xFFC8A97E),
+          surface: Color(0xFFF5F0E6),
         ),
       ),
       darkTheme: _amoledDark
           ? ThemeData(
               brightness: Brightness.dark,
               useMaterial3: false,
-              fontFamily: GoogleFonts.openSans().fontFamily,
-              textTheme: GoogleFonts.openSansTextTheme(
-                ThemeData.dark().textTheme,
-              ),
+              fontFamily: 'Poppins',
               scaffoldBackgroundColor: const Color(0xFF000000),
               cardColor: const Color(0xFF0A0A0A),
               colorScheme: const ColorScheme.dark(
-                primary: Color(0xFF7EC8A0),
-                secondary: Color(0xFF4A9E7A),
+                primary: Color(0xFFD1A98A),
+                secondary: Color(0xFFC8A97E),
                 surface: Color(0xFF000000),
               ),
               appBarTheme: const AppBarTheme(

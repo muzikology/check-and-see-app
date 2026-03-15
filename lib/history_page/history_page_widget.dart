@@ -169,9 +169,9 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF2F2F5),
+        backgroundColor: Color(0xFFF5F0E6),
         appBar: AppBar(
-          backgroundColor: Color(0xFFF2F2F5),
+          backgroundColor: Color(0xFFF5F0E6),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -180,7 +180,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
             buttonSize: 60.0,
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: Color(0xFF1F2332),
+              color: Color(0xFF3B2F2F),
               size: 30.0,
             ),
             onPressed: () async {
@@ -190,8 +190,8 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
           title: Text(
             'Scan History',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  fontFamily: 'Inter Tight',
-                  color: Color(0xFF1F2332),
+                  fontFamily: 'Times New Roman MT',
+                  color: Color(0xFF3B2F2F),
                   fontSize: 22.0,
                   letterSpacing: 0.0,
                 ),
@@ -249,11 +249,11 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                     height: 52.0,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) =>
-                        Icon(Icons.image_outlined, color: Color(0xFF57636C)),
+                        Icon(Icons.image_outlined, color: Color(0xFF8B6A52)),
                   );
                 }
 
-                return Icon(Icons.inventory_2_rounded, color: Color(0xFF57636C));
+                return Icon(Icons.inventory_2_rounded, color: Color(0xFF8B6A52));
               }
 
               return Padding(
@@ -261,7 +261,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFEDE3D1),
                     borderRadius: BorderRadius.circular(16.0),
                     boxShadow: [
                       BoxShadow(
@@ -280,7 +280,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                             children: [
                               Icon(
                                 Icons.history_rounded,
-                                color: Color(0xFF2F8F46),
+                                color: Color(0xFF5C4033),
                                 size: 80.0,
                               ),
                               Padding(
@@ -291,8 +291,8 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .headlineSmall
                                       .override(
-                                        fontFamily: 'Inter Tight',
-                                        color: Color(0xFF2F8F46),
+                                        fontFamily: 'Times New Roman MT',
+                                        color: Color(0xFF5C4033),
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -307,8 +307,8 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: 'Inter',
-                                        color: Color(0xFF57636C),
+                                        fontFamily: 'Poppins',
+                                        color: Color(0xFF8B6A52),
                                         letterSpacing: 0.0,
                                       ),
                                 ),
@@ -328,12 +328,12 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                         0.0, 0.0, 0.0, 0.0),
                                     iconPadding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 0.0, 0.0),
-                                    color: Color(0xFF2F8F46),
+                                    color: Color(0xFF5C4033),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          fontFamily: 'Inter Tight',
-                                          color: Colors.white,
+                                          fontFamily: 'Times New Roman MT',
+                                          color: Color(0xFFEDE3D1),
                                           letterSpacing: 0.0,
                                         ),
                                     elevation: 3.0,
@@ -351,19 +351,19 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                           itemCount: scans.length + (includeCurrentAnalysis ? 1 : 0),
                             separatorBuilder: (_, __) => Divider(
                               height: 1.0,
-                              color: Color(0xFFF0F0F0),
+                              color: Color(0xFFE5CDAF),
                             ),
                             itemBuilder: (context, index) {
                               if (includeCurrentAnalysis && index == 0) {
                                 final analysis = currentAnalysis!;
                                 final score = analysis.healthScore;
                                 final scoreBg = score >= 80
-                                    ? Color(0xFFE8F5E9)
+                                    ? Color(0xFFF5EAD7)
                                     : score >= 60
                                         ? Color(0xFFF7F0EB)
                                         : Color(0xFFFCECEF);
                                 final scoreColor = score >= 80
-                                    ? Color(0xFF2F8F46)
+                                    ? Color(0xFF5C4033)
                                     : score >= 60
                                         ? Color(0xFFB78466)
                                         : Color(0xFFC24664);
@@ -402,7 +402,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                                   )
                                                 : Icon(
                                                     Icons.inventory_2_rounded,
-                                                    color: Color(0xFF57636C),
+                                                    color: Color(0xFF8B6A52),
                                                   ),
                                           ),
                                         ),
@@ -426,8 +426,8 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                                   style: FlutterFlowTheme.of(context)
                                                       .bodySmall
                                                       .override(
-                                                        fontFamily: 'Inter',
-                                                        color: Color(0xFF57636C),
+                                                        fontFamily: 'Poppins',
+                                                        color: Color(0xFF8B6A52),
                                                         letterSpacing: 0.0,
                                                       ),
                                                 ),
@@ -438,7 +438,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                                   style: FlutterFlowTheme.of(context)
                                                       .bodySmall
                                                       .override(
-                                                        fontFamily: 'Inter',
+                                                        fontFamily: 'Poppins',
                                                         color: scoreColor,
                                                         letterSpacing: 0.0,
                                                       ),
@@ -459,7 +459,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  fontFamily: 'Inter',
+                                                  fontFamily: 'Poppins',
                                                   color: scoreColor,
                                                   fontWeight: FontWeight.bold,
                                                   letterSpacing: 0.0,
@@ -476,12 +476,12 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                   scans[index - (includeCurrentAnalysis ? 1 : 0)];
                               final score = int.tryParse(scan.healthScore.trim()) ?? 0;
                               final scoreBg = score >= 80
-                                  ? Color(0xFFE8F5E9)
+                                  ? Color(0xFFF5EAD7)
                                   : score >= 60
                                       ? Color(0xFFF7F0EB)
                                       : Color(0xFFFCECEF);
                               final scoreColor = score >= 80
-                                  ? Color(0xFF2F8F46)
+                                  ? Color(0xFF5C4033)
                                   : score >= 60
                                       ? Color(0xFFB78466)
                                       : Color(0xFFC24664);
@@ -538,8 +538,8 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                               style: FlutterFlowTheme.of(context)
                                                   .bodySmall
                                                   .override(
-                                                    fontFamily: 'Inter',
-                                                    color: Color(0xFF57636C),
+                                                    fontFamily: 'Poppins',
+                                                    color: Color(0xFF8B6A52),
                                                     letterSpacing: 0.0,
                                                   ),
                                             ),
@@ -550,7 +550,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                               style: FlutterFlowTheme.of(context)
                                                   .bodySmall
                                                   .override(
-                                                    fontFamily: 'Inter',
+                                                    fontFamily: 'Poppins',
                                                     color: scoreColor,
                                                     letterSpacing: 0.0,
                                                   ),
@@ -571,7 +571,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .bodySmall
                                             .override(
-                                              fontFamily: 'Inter',
+                                              fontFamily: 'Poppins',
                                               color: scoreColor,
                                               fontWeight: FontWeight.bold,
                                               letterSpacing: 0.0,

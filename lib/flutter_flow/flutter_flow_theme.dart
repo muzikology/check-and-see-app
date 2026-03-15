@@ -8,8 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 const kThemeModeKey = '__theme_mode__';
 const kThemeModeNameKey = '__theme_mode_name__';
 const kAmoledDarkKey = '__amoled_dark__';
-const _headlineFontFamily = 'Nunito';
-const _bodyFontFamily = 'Open Sans';
+const _headlineFontFamily = 'Times New Roman MT';
+const _subheadingFontFamily = 'Perandory SemiCondensed';
+const _bodyFontFamily = 'Poppins';
+const _accentFontFamily = 'Sloop Script Pro';
 
 SharedPreferences? _prefs;
 
@@ -177,18 +179,18 @@ class LightModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  late Color primary = const Color(0xFF2F8F46);
-  late Color secondary = const Color(0xFFB78466);
-  late Color tertiary = const Color(0xFFE5C9B5);
-  late Color alternate = const Color(0xFFE0E3E7);
-  late Color primaryText = const Color(0xFF1F2332);
-  late Color secondaryText = const Color(0xFF667085);
-  late Color primaryBackground = const Color(0xFFF2F2F5);
-  late Color secondaryBackground = const Color(0xFFFFFFFF);
-  late Color accent1 = const Color(0x332F8F46);
-  late Color accent2 = const Color(0x33B78466);
-  late Color accent3 = const Color(0x33E5C9B5);
-  late Color accent4 = const Color(0xCCFFFFFF);
+  late Color primary = const Color(0xFF5C4033);
+  late Color secondary = const Color(0xFFC8A97E);
+  late Color tertiary = const Color(0xFFEDE3D1);
+  late Color alternate = const Color(0xFFE6D8C3);
+  late Color primaryText = const Color(0xFF3B2F2F);
+  late Color secondaryText = const Color(0xFF8B7765);
+  late Color primaryBackground = const Color(0xFFF5F0E6);
+  late Color secondaryBackground = const Color(0xFFFCF8F2);
+  late Color accent1 = const Color(0x335C4033);
+  late Color accent2 = const Color(0x33C8A97E);
+  late Color accent3 = const Color(0x33EDE3D1);
+  late Color accent4 = const Color(0xCCFCF8F2);
   late Color success = const Color(0xFF249689);
   late Color warning = const Color(0xFFF9CF58);
   late Color error = const Color(0xFFFF5963);
@@ -250,105 +252,115 @@ class ThemeTypography extends Typography {
 
   String get displayLargeFamily => _headlineFontFamily;
   bool get displayLargeIsCustom => false;
-  TextStyle get displayLarge => GoogleFonts.nunito(
+    TextStyle get displayLarge => TextStyle(
+      fontFamily: _headlineFontFamily,
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
         fontSize: 64.0,
       );
   String get displayMediumFamily => _headlineFontFamily;
   bool get displayMediumIsCustom => false;
-  TextStyle get displayMedium => GoogleFonts.nunito(
+    TextStyle get displayMedium => TextStyle(
+      fontFamily: _headlineFontFamily,
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
         fontSize: 44.0,
       );
   String get displaySmallFamily => _headlineFontFamily;
   bool get displaySmallIsCustom => false;
-  TextStyle get displaySmall => GoogleFonts.nunito(
+    TextStyle get displaySmall => TextStyle(
+      fontFamily: _headlineFontFamily,
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
         fontSize: 36.0,
       );
   String get headlineLargeFamily => _headlineFontFamily;
   bool get headlineLargeIsCustom => false;
-  TextStyle get headlineLarge => GoogleFonts.nunito(
+    TextStyle get headlineLarge => TextStyle(
+      fontFamily: _headlineFontFamily,
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
         fontSize: 32.0,
       );
   String get headlineMediumFamily => _headlineFontFamily;
   bool get headlineMediumIsCustom => false;
-  TextStyle get headlineMedium => GoogleFonts.nunito(
+    TextStyle get headlineMedium => TextStyle(
+      fontFamily: _headlineFontFamily,
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
         fontSize: 28.0,
       );
   String get headlineSmallFamily => _headlineFontFamily;
   bool get headlineSmallIsCustom => false;
-  TextStyle get headlineSmall => GoogleFonts.nunito(
+    TextStyle get headlineSmall => TextStyle(
+      fontFamily: _headlineFontFamily,
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
         fontSize: 24.0,
       );
-  String get titleLargeFamily => _headlineFontFamily;
+    String get titleLargeFamily => _subheadingFontFamily;
   bool get titleLargeIsCustom => false;
-  TextStyle get titleLarge => GoogleFonts.nunito(
+    TextStyle get titleLarge => TextStyle(
+      fontFamily: _subheadingFontFamily,
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 20.0,
       );
-  String get titleMediumFamily => _headlineFontFamily;
+    String get titleMediumFamily => _subheadingFontFamily;
   bool get titleMediumIsCustom => false;
-  TextStyle get titleMedium => GoogleFonts.nunito(
+    TextStyle get titleMedium => TextStyle(
+      fontFamily: _subheadingFontFamily,
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 18.0,
       );
-  String get titleSmallFamily => _headlineFontFamily;
+    String get titleSmallFamily => _subheadingFontFamily;
   bool get titleSmallIsCustom => false;
-  TextStyle get titleSmall => GoogleFonts.nunito(
+    TextStyle get titleSmall => TextStyle(
+      fontFamily: _subheadingFontFamily,
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
       );
   String get labelLargeFamily => _bodyFontFamily;
   bool get labelLargeIsCustom => false;
-  TextStyle get labelLarge => GoogleFonts.openSans(
+  TextStyle get labelLarge => GoogleFonts.poppins(
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
   String get labelMediumFamily => _bodyFontFamily;
   bool get labelMediumIsCustom => false;
-  TextStyle get labelMedium => GoogleFonts.openSans(
+  TextStyle get labelMedium => GoogleFonts.poppins(
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
   String get labelSmallFamily => _bodyFontFamily;
   bool get labelSmallIsCustom => false;
-  TextStyle get labelSmall => GoogleFonts.openSans(
-        color: theme.secondaryText,
-        fontWeight: FontWeight.normal,
+    TextStyle get labelSmall => const TextStyle(
+      fontFamily: _accentFontFamily,
+      color: Color(0xFFC8A97E),
+      fontWeight: FontWeight.w400,
         fontSize: 12.0,
       );
   String get bodyLargeFamily => _bodyFontFamily;
   bool get bodyLargeIsCustom => false;
-  TextStyle get bodyLarge => GoogleFonts.openSans(
+  TextStyle get bodyLarge => GoogleFonts.poppins(
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
   String get bodyMediumFamily => _bodyFontFamily;
   bool get bodyMediumIsCustom => false;
-  TextStyle get bodyMedium => GoogleFonts.openSans(
+  TextStyle get bodyMedium => GoogleFonts.poppins(
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
   String get bodySmallFamily => _bodyFontFamily;
   bool get bodySmallIsCustom => false;
-  TextStyle get bodySmall => GoogleFonts.openSans(
+  TextStyle get bodySmall => GoogleFonts.poppins(
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 12.0,
@@ -363,18 +375,18 @@ class DarkModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  late Color primary = const Color(0xFF5AAF72);
-  late Color secondary = const Color(0xFFD1A98A);
-  late Color tertiary = const Color(0xFFE5C9B5);
-  late Color alternate = const Color(0xFF262D34);
-  late Color primaryText = const Color(0xFFFFFFFF);
-  late Color secondaryText = const Color(0xFF95A1AC);
-  late Color primaryBackground = const Color(0xFF1D2428);
-  late Color secondaryBackground = const Color(0xFF14181B);
-  late Color accent1 = const Color(0x335AAF72);
-  late Color accent2 = const Color(0x33D1A98A);
-  late Color accent3 = const Color(0x33E5C9B5);
-  late Color accent4 = const Color(0xB2262D34);
+  late Color primary = const Color(0xFFD1A98A);
+  late Color secondary = const Color(0xFFC8A97E);
+  late Color tertiary = const Color(0xFF5C4033);
+  late Color alternate = const Color(0xFF2B2520);
+  late Color primaryText = const Color(0xFFF7EFE3);
+  late Color secondaryText = const Color(0xFFD9C4A8);
+  late Color primaryBackground = const Color(0xFF1E1814);
+  late Color secondaryBackground = const Color(0xFF2A221C);
+  late Color accent1 = const Color(0x33D1A98A);
+  late Color accent2 = const Color(0x33C8A97E);
+  late Color accent3 = const Color(0x335C4033);
+  late Color accent4 = const Color(0xB22A221C);
   late Color success = const Color(0xFF249689);
   late Color warning = const Color(0xFFF9CF58);
   late Color error = const Color(0xFFFF5963);
@@ -401,23 +413,33 @@ extension TextStyleHelper on TextStyle {
     );
 
     if (useGoogleFonts && resolvedFontFamily != null) {
-      font = GoogleFonts.getFont(resolvedFontFamily,
+      try {
+        font = GoogleFonts.getFont(
+          resolvedFontFamily,
           fontWeight: fontWeight ?? font?.fontWeight ?? this.fontWeight,
-          fontStyle: fontStyle ?? font?.fontStyle ?? this.fontStyle);
+          fontStyle: fontStyle ?? font?.fontStyle ?? this.fontStyle,
+        );
+      } catch (_) {
+        font = (font ?? this).copyWith(fontFamily: resolvedFontFamily);
+      }
     }
 
     if (font != null && resolvedFontFamily != null) {
-      font = GoogleFonts.getFont(
-        resolvedFontFamily,
-        color: font.color,
-        fontSize: font.fontSize,
-        fontWeight: font.fontWeight,
-        fontStyle: font.fontStyle,
-        letterSpacing: font.letterSpacing,
-        height: font.height,
-        decoration: font.decoration,
-        shadows: font.shadows,
-      );
+      try {
+        font = GoogleFonts.getFont(
+          resolvedFontFamily,
+          color: font.color,
+          fontSize: font.fontSize,
+          fontWeight: font.fontWeight,
+          fontStyle: font.fontStyle,
+          letterSpacing: font.letterSpacing,
+          height: font.height,
+          decoration: font.decoration,
+          shadows: font.shadows,
+        );
+      } catch (_) {
+        font = (font ?? this).copyWith(fontFamily: resolvedFontFamily);
+      }
     }
 
     return font != null
@@ -470,6 +492,18 @@ String? _resolvePremiumFontFamily(String? fontFamily) {
   if (normalized.startsWith('inter')) {
     return _bodyFontFamily;
   }
+  if (squashed.startsWith('poppins')) {
+    return _bodyFontFamily;
+  }
+  if (squashed.startsWith('timesnewroman')) {
+    return _headlineFontFamily;
+  }
+  if (squashed.startsWith('perandory')) {
+    return _subheadingFontFamily;
+  }
+  if (squashed.startsWith('sloopscriptpro')) {
+    return _accentFontFamily;
+  }
   if (squashed.startsWith('nunito')) {
     return _headlineFontFamily;
   }
@@ -484,6 +518,10 @@ String? _resolvePremiumFontFamily(String? fontFamily) {
     case 'Inter':
     case _bodyFontFamily:
       return _bodyFontFamily;
+    case _subheadingFontFamily:
+      return _subheadingFontFamily;
+    case _accentFontFamily:
+      return _accentFontFamily;
     default:
       return fontFamily;
   }

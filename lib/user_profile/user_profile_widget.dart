@@ -191,6 +191,100 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     return 'image/jpeg';
   }
 
+  List<String> _splitCsvSelections(String value) {
+    if (value.trim().isEmpty) {
+      return const [];
+    }
+    return value
+        .split(',')
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList();
+  }
+
+  String _allergiesFromSwitches() {
+    final allergies = <String>[];
+    if (_model.switchValue1 ?? false) allergies.add('Dairy');
+    if (_model.switchValue2 ?? false) allergies.add('Gluten');
+    if (_model.switchValue3 ?? false) allergies.add('Nuts');
+    if (_model.switchValue4 ?? false) allergies.add('Fragrance');
+    return allergies.join(', ');
+  }
+
+  void _applyAllergySwitches(String allergiesCsv) {
+    final allergies = _splitCsvSelections(allergiesCsv)
+        .map((item) => item.toLowerCase())
+        .toSet();
+    _model.switchValue1 = allergies.contains('dairy');
+    _model.switchValue2 = allergies.contains('gluten');
+    _model.switchValue3 = allergies.contains('nuts');
+    _model.switchValue4 = allergies.contains('fragrance');
+  }
+
+  Future<void> _saveProfileSelections({
+    String? skinType,
+    String? dietType,
+    List<String>? healthGoals,
+  }) async {
+    if (!loggedIn || currentUserUid.isEmpty) {
+      return;
+    }
+
+    final selectedSkinType = skinType ?? _model.choiceChipsValue1 ?? '';
+    final selectedDietType = dietType ?? _model.choiceChipsValue2 ?? '';
+    final selectedGoals =
+        (healthGoals ?? _model.choiceChipsValues3 ?? const <String>[])
+            .where((item) => item.trim().isNotEmpty)
+            .toList();
+    final selectedAllergies = _allergiesFromSwitches();
+
+    await ProfilesRecord.collection.doc(currentUserUid).set(
+          createProfilesRecordData(
+            uid: currentUserUid,
+            userId: currentUserUid,
+            email: currentUserEmail,
+            displayName: _displayName,
+            skinType:
+                selectedSkinType.trim().isEmpty ? null : selectedSkinType.trim(),
+            dietType:
+                selectedDietType.trim().isEmpty ? null : selectedDietType.trim(),
+            weightGoal: selectedGoals.isEmpty ? null : selectedGoals.join(', '),
+            allergies: selectedAllergies.isEmpty ? null : selectedAllergies,
+          ),
+          SetOptions(merge: true),
+        );
+  }
+
+  Future<void> _loadProfileSelections() async {
+    if (!loggedIn || currentUserUid.isEmpty) {
+      return;
+    }
+
+    final profile = await ProfilesRecord.getDocumentOnce(
+      ProfilesRecord.collection.doc(currentUserUid),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    safeSetState(() {
+      if (profile.skinType.trim().isNotEmpty) {
+        _model.choiceChipsValue1 = profile.skinType.trim();
+      }
+      if (profile.dietType.trim().isNotEmpty) {
+        _model.choiceChipsValue2 = profile.dietType.trim();
+      }
+      final savedGoals = _splitCsvSelections(profile.weightGoal);
+      if (savedGoals.isNotEmpty) {
+        _model.choiceChipsValues3 = savedGoals;
+      }
+      if (profile.allergies.trim().isNotEmpty) {
+        _applyAllergySwitches(profile.allergies);
+      }
+    });
+  }
+
   Future<void> _saveAvatar(String newAvatarUrl) async {
     await currentUserReference?.set(
       createUsersRecordData(photoUrl: newAvatarUrl),
@@ -445,7 +539,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
       return Text(
         'Sign in to preview persisted profile data.',
         style: FlutterFlowTheme.of(context).bodyMedium.override(
-              font: GoogleFonts.inter(
+              font: GoogleFonts.poppins(
                 fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
               ),
@@ -464,7 +558,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           return Text(
             'No profile saved yet. Use "Seed Demo Profile Data" or create a new account.',
             style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  font: GoogleFonts.inter(
+                  font: GoogleFonts.poppins(
                     fontWeight:
                         FlutterFlowTheme.of(context).bodyMedium.fontWeight,
                     fontStyle:
@@ -496,12 +590,20 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     super.initState();
     _model = createModel(context, () => UserProfileModel());
 
+    _model.choiceChipsValueController1 = FormFieldController<List<String>>([]);
+    _model.choiceChipsValueController2 = FormFieldController<List<String>>([]);
+    _model.choiceChipsValueController3 = FormFieldController<List<String>>([]);
+
     _model.switchValue1 = true;
     _model.switchValue2 = false;
     _model.switchValue3 = true;
     _model.switchValue4 = false;
     _model.switchValue5 = true;
     _model.switchValue6 = FlutterFlowTheme.themeMode == ThemeMode.dark;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProfileSelections();
+    });
   }
 
   @override
@@ -527,12 +629,12 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           title: Text(
             'My Profile',
             style: FlutterFlowTheme.of(context).titleLarge.override(
-                  font: GoogleFonts.interTight(
+                  font: TextStyle(fontFamily: 'Times New Roman MT',
                     fontWeight: FontWeight.bold,
                     fontStyle:
                         FlutterFlowTheme.of(context).titleLarge.fontStyle,
                   ),
-                  color: Color(0xFF2D3748),
+                  color: Color(0xFF3B2F2F),
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.bold,
                   fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
@@ -546,7 +648,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                 buttonSize: 44.0,
                 icon: Icon(
                   Icons.settings_outlined,
-                  color: Color(0xFF2D3748),
+                  color: Color(0xFF3B2F2F),
                   size: 22.0,
                 ),
                 onPressed: () {
@@ -610,7 +712,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                               style: FlutterFlowTheme.of(context)
                                                   .displaySmall
                                                   .override(
-                                                    font: GoogleFonts.interTight(
+                                                    font: TextStyle(fontFamily: 'Times New Roman MT',
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontStyle:
@@ -635,7 +737,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .displaySmall
                                                 .override(
-                                                  font: GoogleFonts.interTight(
+                                                  font: TextStyle(fontFamily: 'Times New Roman MT',
                                                     fontWeight:
                                                         FontWeight.bold,
                                                     fontStyle:
@@ -656,7 +758,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .displaySmall
                                           .override(
-                                            font: GoogleFonts.interTight(
+                                            font: TextStyle(fontFamily: 'Times New Roman MT',
                                               fontWeight: FontWeight.bold,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
@@ -676,13 +778,13 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                       _displayName,
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
-                                font: GoogleFonts.interTight(
+                                font: TextStyle(fontFamily: 'Times New Roman MT',
                                   fontWeight: FontWeight.bold,
                                   fontStyle: FlutterFlowTheme.of(context)
                                       .headlineMedium
                                       .fontStyle,
                                 ),
-                                color: Color(0xFF2D3748),
+                                color: Color(0xFF3B2F2F),
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FlutterFlowTheme.of(context)
@@ -693,7 +795,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     Text(
                       _email,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            font: GoogleFonts.inter(
+                            font: GoogleFonts.poppins(
                               fontWeight: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .fontWeight,
@@ -730,7 +832,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         color: Color(0xFFF7F0EB),
                         textStyle:
                             FlutterFlowTheme.of(context).titleSmall.override(
-                                  font: GoogleFonts.interTight(
+                                  font: TextStyle(fontFamily: 'Times New Roman MT',
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
@@ -758,7 +860,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFEDE3D1),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 16.0,
@@ -788,13 +890,13 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
-                                      font: GoogleFonts.interTight(
+                                      font: TextStyle(fontFamily: 'Times New Roman MT',
                                         fontWeight: FontWeight.bold,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .fontStyle,
                                       ),
-                                      color: Color(0xFF2D3748),
+                                      color: Color(0xFF3B2F2F),
                                       letterSpacing: 0.0,
                                     ),
                               ),
@@ -812,7 +914,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     key: _settingsSectionKey,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFEDE3D1),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 16.0,
@@ -854,13 +956,13 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
-                                      font: GoogleFonts.interTight(
+                                      font: TextStyle(fontFamily: 'Times New Roman MT',
                                         fontWeight: FontWeight.bold,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .fontStyle,
                                       ),
-                                      color: Color(0xFF2D3748),
+                                      color: Color(0xFF3B2F2F),
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FlutterFlowTheme.of(context)
@@ -890,7 +992,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .labelMedium
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight: FontWeight.w600,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
@@ -915,15 +1017,21 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                       ChipData('Combination'),
                                       ChipData('Sensitive')
                                     ],
-                                    onChanged: (val) => safeSetState(() =>
-                                        _model.choiceChipsValue1 =
-                                            val?.firstOrNull),
+                                    onChanged: (val) async {
+                                      final selected = val?.firstOrNull;
+                                      safeSetState(
+                                        () => _model.choiceChipsValue1 = selected,
+                                      );
+                                      await _saveProfileSelections(
+                                        skinType: selected,
+                                      );
+                                    },
                                     selectedChipStyle: ChipStyle(
                                       backgroundColor: Color(0xFFB78466),
                                       textStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
@@ -952,7 +1060,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                       textStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w500,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
@@ -1010,7 +1118,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .labelMedium
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight: FontWeight.w600,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
@@ -1035,15 +1143,21 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                       ChipData('Vegan'),
                                       ChipData('Low Carb')
                                     ],
-                                    onChanged: (val) => safeSetState(() =>
-                                        _model.choiceChipsValue2 =
-                                            val?.firstOrNull),
+                                    onChanged: (val) async {
+                                      final selected = val?.firstOrNull;
+                                      safeSetState(
+                                        () => _model.choiceChipsValue2 = selected,
+                                      );
+                                      await _saveProfileSelections(
+                                        dietType: selected,
+                                      );
+                                    },
                                     selectedChipStyle: ChipStyle(
-                                      backgroundColor: Color(0xFF7B68EE),
+                                      backgroundColor: Color(0xFFB78466),
                                       textStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
@@ -1064,7 +1178,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           EdgeInsetsDirectional.fromSTEB(
                                               14.0, 6.0, 14.0, 6.0),
                                       elevation: 0.0,
-                                      borderColor: Color(0xFF7B68EE),
+                                      borderColor: Color(0xFFB78466),
                                       borderRadius: BorderRadius.circular(20.0),
                                     ),
                                     unselectedChipStyle: ChipStyle(
@@ -1072,7 +1186,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                       textStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w500,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
@@ -1130,7 +1244,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .labelMedium
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight: FontWeight.w600,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
@@ -1155,14 +1269,21 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                       ChipData('Clear Skin'),
                                       ChipData('General Health')
                                     ],
-                                    onChanged: (val) => safeSetState(
-                                        () => _model.choiceChipsValues3 = val),
+                                    onChanged: (val) async {
+                                      final selected = val ?? const <String>[];
+                                      safeSetState(
+                                        () => _model.choiceChipsValues3 = selected,
+                                      );
+                                      await _saveProfileSelections(
+                                        healthGoals: selected,
+                                      );
+                                    },
                                     selectedChipStyle: ChipStyle(
-                                      backgroundColor: Color(0xFFED8936),
+                                      backgroundColor: Color(0xFFC8A97E),
                                       textStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
@@ -1183,7 +1304,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           EdgeInsetsDirectional.fromSTEB(
                                               14.0, 6.0, 14.0, 6.0),
                                       elevation: 0.0,
-                                      borderColor: Color(0xFFED8936),
+                                      borderColor: Color(0xFFC8A97E),
                                       borderRadius: BorderRadius.circular(20.0),
                                     ),
                                     unselectedChipStyle: ChipStyle(
@@ -1191,7 +1312,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                       textStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w500,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
@@ -1242,7 +1363,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFEDE3D1),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 16.0,
@@ -1274,7 +1395,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Icon(
                                     Icons.warning_amber_rounded,
-                                    color: Color(0xFFED8936),
+                                    color: Color(0xFFC8A97E),
                                     size: 20.0,
                                   ),
                                 ),
@@ -1284,13 +1405,13 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
-                                      font: GoogleFonts.interTight(
+                                      font: TextStyle(fontFamily: 'Times New Roman MT',
                                         fontWeight: FontWeight.bold,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .fontStyle,
                                       ),
-                                      color: Color(0xFF2D3748),
+                                      color: Color(0xFF3B2F2F),
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FlutterFlowTheme.of(context)
@@ -1324,7 +1445,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           children: [
                                             Icon(
                                               Icons.local_drink_outlined,
-                                              color: Color(0xFFED8936),
+                                              color: Color(0xFFC8A97E),
                                               size: 20.0,
                                             ),
                                             Text(
@@ -1333,7 +1454,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                       context)
                                                   .bodyMedium
                                                   .override(
-                                                    font: GoogleFonts.inter(
+                                                    font: GoogleFonts.poppins(
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontStyle:
@@ -1342,7 +1463,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                               .bodyMedium
                                                               .fontStyle,
                                                     ),
-                                                    color: Color(0xFF2D3748),
+                                                    color: Color(0xFF3B2F2F),
                                                     letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     fontStyle:
@@ -1359,9 +1480,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           onChanged: (newValue) async {
                                             safeSetState(() => _model
                                                 .switchValue1 = newValue!);
+                                            await _saveProfileSelections();
                                           },
                                           activeColor: Color(0xFFB78466),
-                                          activeTrackColor: Color(0xFFB2DFCC),
+                                          activeTrackColor: Color(0xFFE6D7C0),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
                                         ),
@@ -1391,7 +1513,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           children: [
                                             Icon(
                                               Icons.grain_outlined,
-                                              color: Color(0xFFED8936),
+                                              color: Color(0xFFC8A97E),
                                               size: 20.0,
                                             ),
                                             Text(
@@ -1400,7 +1522,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                       context)
                                                   .bodyMedium
                                                   .override(
-                                                    font: GoogleFonts.inter(
+                                                    font: GoogleFonts.poppins(
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontStyle:
@@ -1409,7 +1531,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                               .bodyMedium
                                                               .fontStyle,
                                                     ),
-                                                    color: Color(0xFF2D3748),
+                                                    color: Color(0xFF3B2F2F),
                                                     letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     fontStyle:
@@ -1426,9 +1548,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           onChanged: (newValue) async {
                                             safeSetState(() => _model
                                                 .switchValue2 = newValue!);
+                                            await _saveProfileSelections();
                                           },
                                           activeColor: Color(0xFFB78466),
-                                          activeTrackColor: Color(0xFFB2DFCC),
+                                          activeTrackColor: Color(0xFFE6D7C0),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
                                         ),
@@ -1458,7 +1581,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           children: [
                                             Icon(
                                               Icons.eco_outlined,
-                                              color: Color(0xFFED8936),
+                                              color: Color(0xFFC8A97E),
                                               size: 20.0,
                                             ),
                                             Text(
@@ -1467,7 +1590,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                       context)
                                                   .bodyMedium
                                                   .override(
-                                                    font: GoogleFonts.inter(
+                                                    font: GoogleFonts.poppins(
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontStyle:
@@ -1476,7 +1599,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                               .bodyMedium
                                                               .fontStyle,
                                                     ),
-                                                    color: Color(0xFF2D3748),
+                                                    color: Color(0xFF3B2F2F),
                                                     letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     fontStyle:
@@ -1493,9 +1616,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           onChanged: (newValue) async {
                                             safeSetState(() => _model
                                                 .switchValue3 = newValue!);
+                                            await _saveProfileSelections();
                                           },
                                           activeColor: Color(0xFFB78466),
-                                          activeTrackColor: Color(0xFFB2DFCC),
+                                          activeTrackColor: Color(0xFFE6D7C0),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
                                         ),
@@ -1525,7 +1649,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           children: [
                                             Icon(
                                               Icons.air_outlined,
-                                              color: Color(0xFFED8936),
+                                              color: Color(0xFFC8A97E),
                                               size: 20.0,
                                             ),
                                             Text(
@@ -1534,7 +1658,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                       context)
                                                   .bodyMedium
                                                   .override(
-                                                    font: GoogleFonts.inter(
+                                                    font: GoogleFonts.poppins(
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontStyle:
@@ -1543,7 +1667,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                               .bodyMedium
                                                               .fontStyle,
                                                     ),
-                                                    color: Color(0xFF2D3748),
+                                                    color: Color(0xFF3B2F2F),
                                                     letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     fontStyle:
@@ -1560,9 +1684,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           onChanged: (newValue) async {
                                             safeSetState(() => _model
                                                 .switchValue4 = newValue!);
+                                            await _saveProfileSelections();
                                           },
                                           activeColor: Color(0xFFB78466),
-                                          activeTrackColor: Color(0xFFB2DFCC),
+                                          activeTrackColor: Color(0xFFE6D7C0),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
                                         ),
@@ -1583,7 +1708,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFEDE3D1),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 16.0,
@@ -1608,14 +1733,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                 width: 36.0,
                                 height: 36.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFEEF2FF),
+                                  color: Color(0xFFF7F0EB),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Icon(
                                     Icons.settings_outlined,
-                                    color: Color(0xFF7B68EE),
+                                    color: Color(0xFFB78466),
                                     size: 20.0,
                                   ),
                                 ),
@@ -1625,13 +1750,13 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
-                                      font: GoogleFonts.interTight(
+                                      font: TextStyle(fontFamily: 'Times New Roman MT',
                                         fontWeight: FontWeight.bold,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .fontStyle,
                                       ),
-                                      color: Color(0xFF2D3748),
+                                      color: Color(0xFF3B2F2F),
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FlutterFlowTheme.of(context)
@@ -1665,7 +1790,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           children: [
                                             Icon(
                                               Icons.notifications_outlined,
-                                              color: Color(0xFF7B68EE),
+                                              color: Color(0xFFB78466),
                                               size: 20.0,
                                             ),
                                             Text(
@@ -1674,7 +1799,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                       context)
                                                   .bodyMedium
                                                   .override(
-                                                    font: GoogleFonts.inter(
+                                                    font: GoogleFonts.poppins(
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontStyle:
@@ -1683,7 +1808,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                               .bodyMedium
                                                               .fontStyle,
                                                     ),
-                                                    color: Color(0xFF2D3748),
+                                                    color: Color(0xFF3B2F2F),
                                                     letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     fontStyle:
@@ -1701,8 +1826,8 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                             safeSetState(() => _model
                                                 .switchValue5 = newValue!);
                                           },
-                                          activeColor: Color(0xFF7B68EE),
-                                          activeTrackColor: Color(0xFFCAC5F7),
+                                          activeColor: Color(0xFFB78466),
+                                          activeTrackColor: Color(0xFFE6D7C0),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
                                         ),
@@ -1732,7 +1857,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           children: [
                                             Icon(
                                               Icons.color_lens_outlined,
-                                              color: Color(0xFF7B68EE),
+                                              color: Color(0xFFB78466),
                                               size: 20.0,
                                             ),
                                             Text(
@@ -1741,7 +1866,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                       context)
                                                   .bodyMedium
                                                   .override(
-                                                    font: GoogleFonts.inter(
+                                                    font: GoogleFonts.poppins(
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontStyle:
@@ -1750,7 +1875,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                               .bodyMedium
                                                               .fontStyle,
                                                     ),
-                                                    color: Color(0xFF2D3748),
+                                                    color: Color(0xFF3B2F2F),
                                                     letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     fontStyle:
@@ -1810,7 +1935,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           children: [
                                             Icon(
                                               Icons.brightness_2_outlined,
-                                              color: Color(0xFF7B68EE),
+                                              color: Color(0xFFB78466),
                                               size: 20.0,
                                             ),
                                             Text(
@@ -1819,7 +1944,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                       context)
                                                   .bodyMedium
                                                   .override(
-                                                    font: GoogleFonts.inter(
+                                                    font: GoogleFonts.poppins(
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontStyle:
@@ -1828,7 +1953,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                                               .bodyMedium
                                                               .fontStyle,
                                                     ),
-                                                    color: Color(0xFF2D3748),
+                                                    color: Color(0xFF3B2F2F),
                                                     letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     fontStyle:
@@ -1865,8 +1990,8 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                               ),
                                             );
                                           },
-                                          activeColor: Color(0xFF7B68EE),
-                                          activeTrackColor: Color(0xFFCAC5F7),
+                                          activeColor: Color(0xFFB78466),
+                                          activeTrackColor: Color(0xFFE6D7C0),
                                           inactiveTrackColor: Color(0xFFE2E8F0),
                                           inactiveThumbColor: Color(0xFFCBD5E0),
                                         ),
@@ -1890,17 +2015,17 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                               width: double.infinity,
                               height: 44.0,
                               color: Color(0xFFF7F0EB),
-                              iconColor: Color(0xFF2F8F46),
+                              iconColor: Color(0xFF5C4033),
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleSmall
                                   .override(
-                                    font: GoogleFonts.interTight(
+                                    font: TextStyle(fontFamily: 'Times New Roman MT',
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF2F8F46),
+                                    color: Color(0xFF5C4033),
                                     letterSpacing: 0.0,
                                   ),
                               borderSide: BorderSide(
@@ -1931,7 +2056,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleSmall
                                   .override(
-                                    font: GoogleFonts.interTight(
+                                    font: TextStyle(fontFamily: 'Times New Roman MT',
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
@@ -1965,7 +2090,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFEDE3D1),
             boxShadow: [
               BoxShadow(
                 blurRadius: 10.0,
@@ -1989,14 +2114,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     children: [
                       Icon(
                         Icons.home_rounded,
-                        color: Color(0xFF57636C),
+                        color: Color(0xFF9E7E6A),
                         size: 28.0,
                       ),
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              fontFamily: 'Poppins',
+                              color: Color(0xFF9E7E6A),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -2013,14 +2138,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     children: [
                       Icon(
                         Icons.qr_code_scanner_rounded,
-                        color: Color(0xFF57636C),
+                        color: Color(0xFF9E7E6A),
                         size: 28.0,
                       ),
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              fontFamily: 'Poppins',
+                              color: Color(0xFF9E7E6A),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -2037,14 +2162,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     children: [
                       Icon(
                         Icons.insights_rounded,
-                        color: Color(0xFF57636C),
+                        color: Color(0xFF9E7E6A),
                         size: 28.0,
                       ),
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              fontFamily: 'Poppins',
+                              color: Color(0xFF9E7E6A),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -2061,14 +2186,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     children: [
                       Icon(
                         Icons.history_rounded,
-                        color: Color(0xFF57636C),
+                        color: Color(0xFF9E7E6A),
                         size: 28.0,
                       ),
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: Color(0xFF57636C),
+                              fontFamily: 'Poppins',
+                              color: Color(0xFF9E7E6A),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -2083,16 +2208,24 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.person_rounded,
-                        color: Color(0xFF2F8F46),
-                        size: 28.0,
+                      Container(
+                        width: 36.0,
+                        height: 36.0,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF7F0EB),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: const Icon(
+                          Icons.person_rounded,
+                          color: Color(0xFFB78466),
+                          size: 22.0,
+                        ),
                       ),
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: Color(0xFF2F8F46),
+                              fontFamily: 'Poppins',
+                              color: Color(0xFFB78466),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w600,

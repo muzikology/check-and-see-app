@@ -167,9 +167,9 @@ class _HealthInsightDashboardWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF2F2F5),
+        backgroundColor: Color(0xFFF5F0E6),
         appBar: AppBar(
-          backgroundColor: Color(0xFFF2F2F5),
+          backgroundColor: Color(0xFFF5F0E6),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -178,7 +178,7 @@ class _HealthInsightDashboardWidgetState
             buttonSize: 40.0,
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: Color(0xFF1A2340),
+              color: Color(0xFF3B2F2F),
               size: 22.0,
             ),
             onPressed: () async {
@@ -192,7 +192,7 @@ class _HealthInsightDashboardWidgetState
               Text(
                 'Hi, $displayName 👋',
                 style: FlutterFlowTheme.of(context).bodySmall.override(
-                      font: GoogleFonts.inter(
+                      font: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                         fontStyle:
                             FlutterFlowTheme.of(context).bodySmall.fontStyle,
@@ -207,13 +207,13 @@ class _HealthInsightDashboardWidgetState
               Text(
                 'Your Health Insights',
                 style: FlutterFlowTheme.of(context).headlineMedium.override(
-                      font: GoogleFonts.interTight(
+                      font: TextStyle(fontFamily: 'Times New Roman MT',
                         fontWeight: FontWeight.bold,
                         fontStyle: FlutterFlowTheme.of(context)
                             .headlineMedium
                             .fontStyle,
                       ),
-                      color: Color(0xFF1A2340),
+                      color: Color(0xFF3B2F2F),
                       letterSpacing: 0.0,
                       fontWeight: FontWeight.bold,
                       fontStyle:
@@ -230,10 +230,10 @@ class _HealthInsightDashboardWidgetState
                 borderRadius: 14.0,
                 borderWidth: 0.0,
                 buttonSize: 44.0,
-                fillColor: Colors.white,
+                fillColor: Color(0xFFF5EAD7),
                 icon: Icon(
                   Icons.notifications_none,
-                  color: Color(0xFF1A2340),
+                  color: Color(0xFF3B2F2F),
                   size: 22.0,
                 ),
                 onPressed: () {
@@ -277,7 +277,7 @@ class _HealthInsightDashboardWidgetState
                             style: FlutterFlowTheme.of(context)
                                 .bodySmall
                                 .override(
-                                  font: GoogleFonts.inter(
+                                  font: GoogleFonts.poppins(
                                     fontWeight: FontWeight.normal,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodySmall
@@ -485,7 +485,7 @@ class _HealthInsightDashboardWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .headlineLarge
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: TextStyle(fontFamily: 'Times New Roman MT',
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -506,7 +506,7 @@ class _HealthInsightDashboardWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .bodySmall
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w500,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -583,7 +583,7 @@ class _HealthInsightDashboardWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .headlineLarge
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: TextStyle(fontFamily: 'Times New Roman MT',
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -604,7 +604,7 @@ class _HealthInsightDashboardWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .bodySmall
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w500,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -681,7 +681,7 @@ class _HealthInsightDashboardWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .headlineLarge
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: TextStyle(fontFamily: 'Times New Roman MT',
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -702,7 +702,7 @@ class _HealthInsightDashboardWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .bodySmall
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w500,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -732,7 +732,7 @@ class _HealthInsightDashboardWidgetState
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFEDE3D1),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 16.0,
@@ -764,14 +764,14 @@ class _HealthInsightDashboardWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.bold,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .titleMedium
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF1A2340),
+                                          color: Color(0xFF3B2F2F),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
@@ -787,7 +787,7 @@ class _HealthInsightDashboardWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.normal,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
@@ -821,7 +821,7 @@ class _HealthInsightDashboardWidgetState
                                       style: FlutterFlowTheme.of(context)
                                           .bodySmall
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
@@ -875,7 +875,7 @@ class _HealthInsightDashboardWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w500,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
@@ -909,7 +909,7 @@ class _HealthInsightDashboardWidgetState
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFEDE3D1),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 16.0,
@@ -933,13 +933,13 @@ class _HealthInsightDashboardWidgetState
                             style: FlutterFlowTheme.of(context)
                                 .titleMedium
                                 .override(
-                                  font: GoogleFonts.interTight(
+                                  font: TextStyle(fontFamily: 'Times New Roman MT',
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .fontStyle,
                                   ),
-                                  color: Color(0xFF1A2340),
+                                  color: Color(0xFF3B2F2F),
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.bold,
                                   fontStyle: FlutterFlowTheme.of(context)
@@ -992,7 +992,7 @@ class _HealthInsightDashboardWidgetState
                                               borderRadius:
                                                   BorderRadius.circular(ringBadgeRadius),
                                               border: Border.all(
-                                                color: Colors.white,
+                                                color: Color(0xFFEDE3D1),
                                                 width: 1.0,
                                               ),
                                             ),
@@ -1003,7 +1003,7 @@ class _HealthInsightDashboardWidgetState
                                                         context)
                                                     .bodySmall
                                                     .override(
-                                                      font: GoogleFonts.inter(
+                                                      font: GoogleFonts.poppins(
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         fontStyle:
@@ -1032,7 +1032,7 @@ class _HealthInsightDashboardWidgetState
                                       width: centerCircleSize,
                                       height: centerCircleSize,
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: Color(0xFFEDE3D1),
                                         shape: BoxShape.circle,
                                       ),
                                       child: Align(
@@ -1046,7 +1046,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight: FontWeight.bold,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -1054,7 +1054,7 @@ class _HealthInsightDashboardWidgetState
                                                             .bodySmall
                                                             .fontStyle,
                                                   ),
-                                                  color: Color(0xFF1A2340),
+                                                  color: Color(0xFF3B2F2F),
                                                   fontSize: 11.0,
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.bold,
@@ -1097,7 +1097,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -1105,7 +1105,7 @@ class _HealthInsightDashboardWidgetState
                                                             .bodySmall
                                                             .fontStyle,
                                                   ),
-                                                  color: Color(0xFF1A2340),
+                                                  color: Color(0xFF3B2F2F),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
@@ -1120,7 +1120,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -1173,7 +1173,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -1181,7 +1181,7 @@ class _HealthInsightDashboardWidgetState
                                                             .bodySmall
                                                             .fontStyle,
                                                   ),
-                                                  color: Color(0xFF1A2340),
+                                                  color: Color(0xFF3B2F2F),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
@@ -1196,7 +1196,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -1249,7 +1249,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -1257,7 +1257,7 @@ class _HealthInsightDashboardWidgetState
                                                             .bodySmall
                                                             .fontStyle,
                                                   ),
-                                                  color: Color(0xFF1A2340),
+                                                  color: Color(0xFF3B2F2F),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
@@ -1272,7 +1272,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -1320,7 +1320,7 @@ class _HealthInsightDashboardWidgetState
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFEDE3D1),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 16.0,
@@ -1367,14 +1367,14 @@ class _HealthInsightDashboardWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.bold,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .titleMedium
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF1A2340),
+                                          color: Color(0xFF3B2F2F),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
@@ -1388,7 +1388,7 @@ class _HealthInsightDashboardWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight:
                                                 FlutterFlowTheme.of(context)
                                                     .bodySmall
@@ -1458,7 +1458,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .titleSmall
                                                 .override(
-                                                  font: GoogleFonts.interTight(
+                                                  font: TextStyle(fontFamily: 'Times New Roman MT',
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -1466,7 +1466,7 @@ class _HealthInsightDashboardWidgetState
                                                             .titleSmall
                                                             .fontStyle,
                                                   ),
-                                                  color: Color(0xFF1A2340),
+                                                  color: Color(0xFF3B2F2F),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
@@ -1483,7 +1483,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -1560,7 +1560,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .titleSmall
                                                 .override(
-                                                  font: GoogleFonts.interTight(
+                                                  font: TextStyle(fontFamily: 'Times New Roman MT',
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -1568,7 +1568,7 @@ class _HealthInsightDashboardWidgetState
                                                             .titleSmall
                                                             .fontStyle,
                                                   ),
-                                                  color: Color(0xFF1A2340),
+                                                  color: Color(0xFF3B2F2F),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
@@ -1585,7 +1585,7 @@ class _HealthInsightDashboardWidgetState
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -1640,7 +1640,7 @@ class _HealthInsightDashboardWidgetState
         bottomNavigationBar: Container(
           margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 14.0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFEDE3D1),
             borderRadius: BorderRadius.circular(28.0),
             boxShadow: const [
               BoxShadow(
@@ -1668,7 +1668,7 @@ class _HealthInsightDashboardWidgetState
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1690,7 +1690,7 @@ class _HealthInsightDashboardWidgetState
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1718,7 +1718,7 @@ class _HealthInsightDashboardWidgetState
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFFB78466),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1741,7 +1741,7 @@ class _HealthInsightDashboardWidgetState
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1763,7 +1763,7 @@ class _HealthInsightDashboardWidgetState
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,

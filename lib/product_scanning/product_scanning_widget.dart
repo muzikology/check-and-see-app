@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/beauty/beauty_recommendation_service.dart';
 import '/scan_analyzer.dart';
 import '/scan_session.dart';
 import 'dart:convert';
@@ -75,6 +76,8 @@ class ProductScanningWidget extends StatefulWidget {
 
 class _ProductScanningWidgetState extends State<ProductScanningWidget> {
   late ProductScanningModel _model;
+  final BeautyRecommendationService _beautyRecommendationService =
+      BeautyRecommendationService();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final ImagePicker _imagePicker = ImagePicker();
@@ -161,6 +164,16 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
         productType: _selectedProductType,
         profile: profile,
       );
+
+      if (_selectedProductType == ScanProductType.beauty) {
+        final beautyResult = await _beautyRecommendationService.buildBeautyJourney(
+          imageBytes,
+        );
+        ScanSession.setBeautyAnalysis(beautyResult);
+      } else {
+        ScanSession.setBeautyAnalysis(null);
+      }
+
       ScanSession.setProductType(_selectedProductType);
       ScanSession.updateAnalysis(imageBytes, analysis);
       if (!analysis.persistedByBackend) {
@@ -312,9 +325,9 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF2F2F5),
+        backgroundColor: Color(0xFFF5F0E6),
         appBar: AppBar(
-          backgroundColor: Color(0xFFF2F2F5),
+          backgroundColor: Color(0xFFF5F0E6),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -323,7 +336,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
             buttonSize: 44.0,
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: Color(0xFF1F2332),
+              color: Color(0xFF3B2F2F),
               size: 24.0,
             ),
             onPressed: () async {
@@ -333,12 +346,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
           title: Text(
             'Scan Product',
             style: FlutterFlowTheme.of(context).titleLarge.override(
-                  font: GoogleFonts.nunito(
+                  font: TextStyle(fontFamily: 'Times New Roman MT',
                     fontWeight: FontWeight.bold,
                     fontStyle:
                         FlutterFlowTheme.of(context).titleLarge.fontStyle,
                   ),
-                  color: Color(0xFF1F2332),
+                  color: Color(0xFF3B2F2F),
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.bold,
                   fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
@@ -354,7 +367,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                 buttonSize: 44.0,
                 icon: Icon(
                   Icons.history_rounded,
-                  color: Color(0xFF1F2332),
+                  color: Color(0xFF3B2F2F),
                   size: 24.0,
                 ),
                 onPressed: () async {
@@ -380,10 +393,10 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFFFFF),
+                      color: const Color(0xFFFCF8F2),
                       borderRadius: BorderRadius.circular(16.0),
                       border: Border.all(
-                        color: const Color(0xFFE6E8EF),
+                        color: const Color(0xFFE5CDAF),
                         width: 1.0,
                       ),
                     ),
@@ -406,7 +419,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                               textStyle: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
-                                    font: GoogleFonts.nunito(
+                                    font: TextStyle(fontFamily: 'Perandory SemiCondensed',
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -414,7 +427,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                     ),
                                     color: _selectedProductType == ScanProductType.food
                                         ? Colors.white
-                                        : const Color(0xFF475467),
+                                      : const Color(0xFF8B6A52),
                                     letterSpacing: 0.0,
                                   ),
                               elevation: 0.0,
@@ -440,7 +453,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                               textStyle: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
-                                    font: GoogleFonts.nunito(
+                                    font: TextStyle(fontFamily: 'Perandory SemiCondensed',
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -448,7 +461,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                     ),
                                     color: _selectedProductType == ScanProductType.beauty
                                         ? Colors.white
-                                        : const Color(0xFF475467),
+                                      : const Color(0xFF8B6A52),
                                     letterSpacing: 0.0,
                                   ),
                               elevation: 0.0,
@@ -474,7 +487,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 28.0,
-                            color: Color(0x1F1F2332),
+                            color: Color(0x1A5C4033),
                             offset: Offset(
                               0.0,
                               8.0,
@@ -498,11 +511,10 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                         height: double.infinity,
                                         fit: BoxFit.cover,
                                       )
-                                    : Image.network(
-                                        'https://images.unsplash.com/photo-1593699688785-f710412e7b21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI3MjY2Njh8&ixlib=rb-4.1.0&q=80&w=1080',
+                                    : Container(
                                         width: double.infinity,
                                         height: double.infinity,
-                                        fit: BoxFit.cover,
+                                        color: Colors.transparent,
                                       ),
                               ),
                             ),
@@ -514,19 +526,19 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   colors: _selectedImageBytes != null
                                       ? const [
                                           Color(0x1AFFFFFF),
-                                          Color(0x331F2332),
-                                          Color(0x5C1F2332),
+                                          Color(0x335C4033),
+                                          Color(0x5C5C4033),
                                         ]
                                       : (_isBeautyMode
                                           ? const [
                                               Color(0x52E1C5B3),
                                               Color(0x5EBE8F72),
-                                              Color(0x731F2332),
+                                              Color(0x735C4033),
                                             ]
                                           : const [
                                               Color(0x52DCCCBF),
                                               Color(0x5EB5967F),
-                                              Color(0x731F2332),
+                                              Color(0x735C4033),
                                             ]),
                                   stops: [0.0, 0.5, 1.0],
                                   begin: AlignmentDirectional(0.0, -1.0),
@@ -567,7 +579,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.openSans(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w500,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
@@ -623,7 +635,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                           color: _accentColor,
                           textStyle:
                               FlutterFlowTheme.of(context).titleSmall.override(
-                                    font: GoogleFonts.nunito(
+                                    font: TextStyle(fontFamily: 'Perandory SemiCondensed',
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
@@ -664,10 +676,10 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
                           iconColor: _accentColor,
-                          color: Color(0xFFFFFFFF),
+                          color: Color(0xFFFCF8F2),
                           textStyle:
                               FlutterFlowTheme.of(context).titleSmall.override(
-                                    font: GoogleFonts.nunito(
+                                    font: TextStyle(fontFamily: 'Perandory SemiCondensed',
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
@@ -712,7 +724,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        font: GoogleFonts.nunito(
+                                        font: TextStyle(fontFamily: 'Perandory SemiCondensed',
                                           fontWeight: FontWeight.w600,
                                           fontStyle: FlutterFlowTheme.of(context)
                                               .titleSmall
@@ -751,7 +763,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        font: GoogleFonts.nunito(
+                                        font: TextStyle(fontFamily: 'Perandory SemiCondensed',
                                           fontWeight: FontWeight.w600,
                                           fontStyle: FlutterFlowTheme.of(context)
                                               .titleSmall
@@ -773,7 +785,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Color(0xFFEDE3D1),
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 16.0,
@@ -816,14 +828,14 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        font: GoogleFonts.nunito(
+                                        font: TextStyle(fontFamily: 'Perandory SemiCondensed',
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .titleSmall
                                                   .fontStyle,
                                         ),
-                                        color: Color(0xFF1F2332),
+                                        color: Color(0xFF3B2F2F),
                                         fontSize: 15.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.bold,
@@ -837,7 +849,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                             Divider(
                               height: 1.0,
                               thickness: 1.0,
-                              color: Color(0xFFF0F0F0),
+                              color: Color(0xFFE5CDAF),
                             ),
                             Row(
                               mainAxisSize: MainAxisSize.max,
@@ -855,14 +867,14 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.openSans(
+                                        font: GoogleFonts.poppins(
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
                                                   .fontStyle,
                                         ),
-                                        color: Color(0xFF333333),
+                                        color: Color(0xFF3B2F2F),
                                         fontSize: 14.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.normal,
@@ -891,14 +903,14 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.openSans(
+                                        font: GoogleFonts.poppins(
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
                                                   .fontStyle,
                                         ),
-                                        color: Color(0xFF333333),
+                                        color: Color(0xFF3B2F2F),
                                         fontSize: 14.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.normal,
@@ -925,14 +937,14 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.openSans(
+                                        font: GoogleFonts.poppins(
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
                                                   .fontStyle,
                                         ),
-                                        color: Color(0xFF333333),
+                                        color: Color(0xFF3B2F2F),
                                         fontSize: 14.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.normal,
@@ -959,7 +971,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
         bottomNavigationBar: Container(
           margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 14.0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFEDE3D1),
             borderRadius: BorderRadius.circular(28.0),
             boxShadow: const [
               BoxShadow(
@@ -984,12 +996,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.home_rounded,
-                          color: Color(0xFF667085), size: 22.0),
+                          color: Color(0xFF9E7E6A), size: 22.0),
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: const Color(0xFF667085),
+                              fontFamily: 'Poppins',
+                              color: const Color(0xFF9E7E6A),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1016,7 +1028,7 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFFB78466),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1035,12 +1047,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.insights_rounded,
-                          color: Color(0xFF667085), size: 22.0),
+                          color: Color(0xFF9E7E6A), size: 22.0),
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: const Color(0xFF667085),
+                              fontFamily: 'Poppins',
+                              color: const Color(0xFF9E7E6A),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1057,12 +1069,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.history_rounded,
-                          color: Color(0xFF667085), size: 22.0),
+                          color: Color(0xFF9E7E6A), size: 22.0),
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: const Color(0xFF667085),
+                              fontFamily: 'Poppins',
+                              color: const Color(0xFF9E7E6A),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),
@@ -1079,12 +1091,12 @@ class _ProductScanningWidgetState extends State<ProductScanningWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.person_rounded,
-                          color: Color(0xFF667085), size: 22.0),
+                          color: Color(0xFF9E7E6A), size: 22.0),
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
-                              color: const Color(0xFF667085),
+                              fontFamily: 'Poppins',
+                              color: const Color(0xFF9E7E6A),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
                             ),

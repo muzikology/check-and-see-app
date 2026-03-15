@@ -59,8 +59,8 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
   }) => InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Color(0xFF4A5568)),
-        floatingLabelStyle: const TextStyle(color: Color(0xFF2F8F46)),
-        hintStyle: const TextStyle(color: Color(0xFF6B7280)),
+        floatingLabelStyle: const TextStyle(color: Color(0xFF5C4033)),
+        hintStyle: const TextStyle(color: Color(0xFF8B6A52)),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.white,
@@ -74,7 +74,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide(color: const Color(0xFF2F8F46), width: 1.2),
+          borderSide: BorderSide(color: const Color(0xFF5C4033), width: 1.2),
         ),
       );
 
@@ -172,7 +172,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF2F2F5),
+        backgroundColor: const Color(0xFFF5F0E6),
         body: SafeArea(
           top: true,
           child: LayoutBuilder(
@@ -204,7 +204,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                     Text(
                       'Sign in to continue with your account.',
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            font: GoogleFonts.inter(
+                            font: GoogleFonts.poppins(
                               fontStyle:
                                   FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                             ),
@@ -215,8 +215,8 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                     const SizedBox(height: 12),
                     TabBar(
                       controller: _tabController,
-                      indicatorColor: const Color(0xFF2F8F46),
-                      labelColor: const Color(0xFF2F8F46),
+                      indicatorColor: const Color(0xFF5C4033),
+                      labelColor: const Color(0xFF5C4033),
                       unselectedLabelColor: const Color(0xFF718096),
                       tabs: const [
                         Tab(text: 'Sign In'),
@@ -237,7 +237,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   controller: _signInEmailController,
                                   decoration: _fieldDecoration('Email'),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF2F8F46),
+                                  cursorColor: const Color(0xFF5C4033),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) => (value == null ||
                                           value.trim().isEmpty ||
@@ -263,7 +263,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                     ),
                                   ),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF2F8F46),
+                                  cursorColor: const Color(0xFF5C4033),
                                   obscuringCharacter: '•',
                                   obscureText: !_showSignInPassword,
                                   validator: (value) =>
@@ -278,11 +278,11 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   options: FFButtonOptions(
                                     width: double.infinity,
                                     height: 48,
-                                    color: const Color(0xFF2F8F46),
+                                    color: const Color(0xFF5C4033),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontStyle: FlutterFlowTheme.of(context)
                                                 .titleSmall
                                                 .fontStyle,
@@ -305,7 +305,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   controller: _signUpNameController,
                                   decoration: _fieldDecoration('Full Name'),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF2F8F46),
+                                  cursorColor: const Color(0xFF5C4033),
                                   validator: (value) => (value == null ||
                                           value.trim().length < 2)
                                       ? 'Enter your name.'
@@ -316,7 +316,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   controller: _signUpEmailController,
                                   decoration: _fieldDecoration('Email'),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF2F8F46),
+                                  cursorColor: const Color(0xFF5C4033),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) => (value == null ||
                                           value.trim().isEmpty ||
@@ -342,7 +342,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                     ),
                                   ),
                                   style: _inputTextStyle,
-                                  cursorColor: const Color(0xFF2F8F46),
+                                  cursorColor: const Color(0xFF5C4033),
                                   obscuringCharacter: '•',
                                   obscureText: !_showSignUpPassword,
                                   validator: (value) =>
@@ -416,11 +416,11 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                   options: FFButtonOptions(
                                     width: double.infinity,
                                     height: 48,
-                                    color: const Color(0xFF2F8F46),
+                                    color: const Color(0xFF5C4033),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontStyle: FlutterFlowTheme.of(context)
                                                 .titleSmall
                                                 .fontStyle,

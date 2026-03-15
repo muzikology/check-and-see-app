@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import '/beauty/beauty_models.dart';
+
 enum ScanProductType {
   food,
   beauty,
@@ -48,6 +50,7 @@ class ScanSession {
   static Uint8List? imageBytes;
   static DateTime? scannedAt;
   static ScanAnalysisResult? latestAnalysis;
+  static BeautyAnalysisResult? beautyAnalysis;
   static ScanProductType selectedProductType = ScanProductType.food;
 
   static void setProductType(ScanProductType type) {
@@ -58,12 +61,16 @@ class ScanSession {
     imageBytes = bytes;
     scannedAt = DateTime.now();
     latestAnalysis = null;
+    beautyAnalysis = null;
   }
 
   static void updateAnalysis(Uint8List bytes, ScanAnalysisResult analysis) {
     imageBytes = bytes;
     scannedAt = DateTime.now();
     latestAnalysis = analysis;
+    if (analysis.productType != ScanProductType.beauty) {
+      beautyAnalysis = null;
+    }
   }
 
   static void updateAnalysisOnly(
@@ -76,6 +83,13 @@ class ScanSession {
     }
     scannedAt = at ?? DateTime.now();
     latestAnalysis = analysis;
+    if (analysis.productType != ScanProductType.beauty) {
+      beautyAnalysis = null;
+    }
+  }
+
+  static void setBeautyAnalysis(BeautyAnalysisResult? analysis) {
+    beautyAnalysis = analysis;
   }
 
   static bool get hasScan => imageBytes != null;

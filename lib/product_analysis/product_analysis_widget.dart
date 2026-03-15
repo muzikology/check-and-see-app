@@ -4,6 +4,8 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/beauty/ar_overlay_service.dart';
+import '/beauty/beauty_models.dart';
 import '/scan_session.dart';
 import 'dart:convert';
 import 'dart:ui';
@@ -84,6 +86,7 @@ class ProductAnalysisWidget extends StatefulWidget {
 
 class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
   late ProductAnalysisModel _model;
+  final ArOverlayProvider _arOverlayProvider = const BanubaOverlayProvider();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -106,6 +109,9 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
   List<String> get _warnings => ScanSession.warnings.take(3).toList();
   List<String> get _benefits => ScanSession.benefits.take(3).toList();
   List<String> get _ingredients => ScanSession.ingredients.take(6).toList();
+  BeautyAnalysisResult? get _beauty => ScanSession.beautyAnalysis;
+  bool get _showBeautyInsights =>
+      ScanSession.productType == ScanProductType.beauty && _beauty != null;
 
   String _shareSummary() {
     final brand = ScanSession.brandName.trim();
@@ -157,6 +163,30 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
       return ScanSession.impactForUser.trim();
     }
     return 'Potential benefit based on ingredient and nutrient signals.';
+  }
+
+  Future<void> _startArTryOn() async {
+    final beauty = _beauty;
+    if (beauty == null) {
+      return;
+    }
+
+    final session = await _arOverlayProvider.createSession(
+      recommendations: beauty.recommendations,
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'AR session ready (${session.provider}) with ${session.overlayKeys.length} overlays. Hook this into SDK launch.',
+        ),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
@@ -293,9 +323,9 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF2F2F5),
+        backgroundColor: Color(0xFFF5F0E6),
         appBar: AppBar(
-          backgroundColor: Color(0xFFF2F2F5),
+          backgroundColor: Color(0xFFF5F0E6),
           automaticallyImplyLeading: false,
           leading: Padding(
             padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
@@ -306,7 +336,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
               buttonSize: 44.0,
               icon: Icon(
                 Icons.arrow_back_rounded,
-                color: Color(0xFF1A1A2E),
+                color: Color(0xFF3B2F2F),
                 size: 24.0,
               ),
               onPressed: () async {
@@ -317,12 +347,12 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
           title: Text(
             'Scan Results',
             style: FlutterFlowTheme.of(context).titleLarge.override(
-                  font: GoogleFonts.interTight(
+                  font: TextStyle(fontFamily: 'Times New Roman MT',
                     fontWeight: FontWeight.bold,
                     fontStyle:
                         FlutterFlowTheme.of(context).titleLarge.fontStyle,
                   ),
-                  color: Color(0xFF1A1A2E),
+                  color: Color(0xFF3B2F2F),
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.bold,
                   fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
@@ -338,7 +368,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                 buttonSize: 44.0,
                 icon: Icon(
                   Icons.share_outlined,
-                  color: Color(0xFF1A1A2E),
+                  color: Color(0xFF3B2F2F),
                   size: 24.0,
                 ),
                 onPressed: () async {
@@ -359,7 +389,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFEDE3D1),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 26.0,
@@ -383,7 +413,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                             width: 80.0,
                             height: 80.0,
                             decoration: BoxDecoration(
-                              color: Color(0xFFF0F4FF),
+                              color: Color(0xFFE8DDD4),
                               borderRadius: BorderRadius.circular(16.0),
                             ),
                             child: ClipRRect(
@@ -414,13 +444,13 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .titleLarge
                                     .override(
-                                      font: GoogleFonts.interTight(
+                                      font: TextStyle(fontFamily: 'Times New Roman MT',
                                         fontWeight: FontWeight.bold,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .titleLarge
                                             .fontStyle,
                                       ),
-                                      color: Color(0xFF1A1A2E),
+                                      color: Color(0xFF3B2F2F),
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FlutterFlowTheme.of(context)
@@ -433,13 +463,13 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
-                                      font: GoogleFonts.inter(
+                                      font: GoogleFonts.poppins(
                                         fontWeight: FontWeight.normal,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .fontStyle,
                                       ),
-                                      color: Color(0xFF6B7280),
+                                      color: Color(0xFF8B6A52),
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.normal,
                                       fontStyle: FlutterFlowTheme.of(context)
@@ -450,7 +480,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               Container(
                                 height: 26.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFF0FDF4),
+                                  color: Color(0xFFF5EAD7),
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 child: Padding(
@@ -461,7 +491,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     children: [
                                       Icon(
                                         Icons.verified_rounded,
-                                        color: Color(0xFF16A34A),
+                                        color: Color(0xFFC8A97E),
                                         size: 12.0,
                                       ),
                                       Text(
@@ -469,14 +499,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .labelSmall
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight: FontWeight.w600,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
                                                         .labelSmall
                                                         .fontStyle,
                                               ),
-                                              color: Color(0xFF16A34A),
+                                              color: Color(0xFFC8A97E),
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.w600,
                                               fontStyle:
@@ -504,7 +534,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Color(0xFFEFF6FF),
+                      color: Color(0xFFEDE3D1),
                       borderRadius: BorderRadius.circular(18.0),
                     ),
                     child: Padding(
@@ -513,7 +543,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                         children: [
                           Icon(
                             Icons.person_search_rounded,
-                            color: Color(0xFF1D4ED8),
+                            color: Color(0xFF8B6A52),
                             size: 20.0,
                           ),
                           Expanded(
@@ -522,13 +552,13 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
-                                    font: GoogleFonts.inter(
+                                    font: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF1E3A8A),
+                                    color: Color(0xFF3B2F2F),
                                     letterSpacing: 0.0,
                                   ),
                             ),
@@ -543,7 +573,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFEDE3D1),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 16.0,
@@ -566,13 +596,13 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                           'Health Score',
                           style:
                               FlutterFlowTheme.of(context).titleMedium.override(
-                                    font: GoogleFonts.interTight(
+                                    font: TextStyle(fontFamily: 'Times New Roman MT',
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF6B7280),
+                                    color: Color(0xFF8B6A52),
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -592,7 +622,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                 animation: true,
                                 animateFromLastPercent: true,
                                 progressColor: _scoreColor,
-                                backgroundColor: Color(0xFFF2F2F5),
+                                backgroundColor: Color(0xFFF5F0E6),
                                 startAngle: 270.0,
                               ),
                               Column(
@@ -604,7 +634,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .displaySmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.w800,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
@@ -625,14 +655,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w500,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .labelMedium
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF9CA3AF),
+                                          color: Color(0xFF8B6A52),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
                                           fontStyle:
@@ -650,7 +680,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                           height: 32.0,
                           decoration: BoxDecoration(
                             color: _score >= 80
-                                ? Color(0xFFD1FAE5)
+                                ? Color(0xFFF5EAD7)
                                 : _score >= 60
                                     ? Color(0xFFFEF9C3)
                                     : Color(0xFFFEE2E2),
@@ -665,7 +695,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                 Icon(
                                   Icons.info_outline,
                                   color: _score >= 80
-                                      ? Color(0xFF065F46)
+                                      ? Color(0xFF5C4033)
                                       : _score >= 60
                                           ? Color(0xFFCA8A04)
                                           : Color(0xFF991B1B),
@@ -676,7 +706,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .labelMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -684,7 +714,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                                   .fontStyle,
                                         ),
                                         color: _score >= 80
-                                          ? Color(0xFF065F46)
+                                          ? Color(0xFF5C4033)
                                           : _score >= 60
                                             ? Color(0xFFCA8A04)
                                             : Color(0xFF991B1B),
@@ -704,12 +734,243 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                   ),
                 ),
               ),
+              if (_showBeautyInsights)
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEDE3D1),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 16.0,
+                          color: Color(0x14000000),
+                          offset: Offset(
+                            0.0,
+                            4.0,
+                          ),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(24.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Beauty Match',
+                            style:
+                                FlutterFlowTheme.of(context).titleMedium.override(
+                                      font: TextStyle(
+                                        fontFamily: 'Times New Roman MT',
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .fontStyle,
+                                      ),
+                                      color: Color(0xFF3B2F2F),
+                                      letterSpacing: 0.0,
+                                    ),
+                          ),
+                          Text(
+                            'Skin tone: ${_beauty!.skinTone.label}  •  Undertone: ${_beauty!.undertone.label}',
+                            style: FlutterFlowTheme.of(context).bodySmall.override(
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodySmall
+                                        .fontStyle,
+                                  ),
+                                  color: Color(0xFF8B6A52),
+                                  letterSpacing: 0.0,
+                                ),
+                          ),
+                          Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: _beauty!.facialFeatures.entries
+                                .map(
+                                  (entry) => Container(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        10.0, 6.0, 10.0, 6.0),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFF5EAD7),
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    child: Text(
+                                      '${entry.key}: ${entry.value}',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodySmall
+                                          .override(
+                                            font: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodySmall
+                                                      .fontStyle,
+                                            ),
+                                            color: Color(0xFF5C4033),
+                                            letterSpacing: 0.0,
+                                          ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                          Column(
+                            children: _beauty!.recommendations.take(4).map((r) {
+                              return Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFFCF8F2),
+                                  borderRadius: BorderRadius.circular(14.0),
+                                  border: Border.all(
+                                    color: Color(0xFFE5CDAF),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${r.category.label}: ${r.name}',
+                                        style: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                              font: TextStyle(
+                                                fontFamily: 'Times New Roman MT',
+                                                fontWeight: FontWeight.w700,
+                                                fontStyle: FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .fontStyle,
+                                              ),
+                                              color: Color(0xFF3B2F2F),
+                                              letterSpacing: 0.0,
+                                            ),
+                                      ),
+                                      Text(
+                                        '${r.brand} • ${r.finish}',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodySmall
+                                            .override(
+                                              font: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle: FlutterFlowTheme.of(context)
+                                                    .bodySmall
+                                                    .fontStyle,
+                                              ),
+                                              color: Color(0xFF8B6A52),
+                                              letterSpacing: 0.0,
+                                            ),
+                                      ),
+                                      Text(
+                                        r.matchReason,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodySmall
+                                            .override(
+                                              font: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.normal,
+                                                fontStyle: FlutterFlowTheme.of(context)
+                                                    .bodySmall
+                                                    .fontStyle,
+                                              ),
+                                              color: Color(0xFF5C4033),
+                                              letterSpacing: 0.0,
+                                            ),
+                                      ),
+                                    ].divide(SizedBox(height: 4.0)),
+                                  ),
+                                ),
+                              );
+                            }).toList().divide(SizedBox(height: 10.0)),
+                          ),
+                          FFButtonWidget(
+                            onPressed: () async {
+                              await _startArTryOn();
+                            },
+                            text: 'Try On with AR',
+                            icon: Icon(
+                              Icons.face_retouching_natural,
+                              size: 18.0,
+                            ),
+                            options: FFButtonOptions(
+                              width: double.infinity,
+                              height: 46.0,
+                              color: Color(0xFFB78466),
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    font: TextStyle(
+                                      fontFamily: 'Perandory SemiCondensed',
+                                      fontWeight: FontWeight.w600,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontStyle,
+                                    ),
+                                    color: Colors.white,
+                                    letterSpacing: 0.0,
+                                  ),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                          ),
+                          Text(
+                            'How to apply this look',
+                            style: FlutterFlowTheme.of(context).titleSmall.override(
+                                  font: TextStyle(
+                                    fontFamily: 'Times New Roman MT',
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontStyle,
+                                  ),
+                                  color: Color(0xFF3B2F2F),
+                                  letterSpacing: 0.0,
+                                ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: _beauty!.tutorialSteps
+                                .take(5)
+                                .toList()
+                                .asMap()
+                                .entries
+                                .map(
+                              (entry) {
+                                final index = entry.key + 1;
+                                final step = entry.value;
+                                return Text(
+                                  '$index. ${step.title} - ${step.description}',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodySmall
+                                      .override(
+                                        font: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.normal,
+                                          fontStyle: FlutterFlowTheme.of(context)
+                                              .bodySmall
+                                              .fontStyle,
+                                        ),
+                                        color: Color(0xFF5C4033),
+                                        letterSpacing: 0.0,
+                                      ),
+                                );
+                              },
+                            ).toList().divide(SizedBox(height: 6.0)),
+                          ),
+                        ].divide(SizedBox(height: 12.0)),
+                      ),
+                    ),
+                  ),
+                ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFEDE3D1),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 16.0,
@@ -752,13 +1013,13 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               style: FlutterFlowTheme.of(context)
                                   .titleMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
+                                    font: TextStyle(fontFamily: 'Times New Roman MT',
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF1A1A2E),
+                                    color: Color(0xFF3B2F2F),
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -772,7 +1033,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                           width: double.infinity,
                           height: 1.0,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF3F4F6),
+                            color: Color(0xFFE9DCC8),
                           ),
                         ),
                         Row(
@@ -806,14 +1067,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .titleSmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF1A1A2E),
+                                          color: Color(0xFF3B2F2F),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
@@ -827,14 +1088,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.normal,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodySmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF6B7280),
+                                          color: Color(0xFF8B6A52),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
@@ -879,14 +1140,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .titleSmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF1A1A2E),
+                                          color: Color(0xFF3B2F2F),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
@@ -900,14 +1161,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.normal,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodySmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF6B7280),
+                                          color: Color(0xFF8B6A52),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
@@ -952,14 +1213,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .titleSmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF1A1A2E),
+                                          color: Color(0xFF3B2F2F),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
@@ -973,14 +1234,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.normal,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodySmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF6B7280),
+                                          color: Color(0xFF8B6A52),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
@@ -1004,7 +1265,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFEDE3D1),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 16.0,
@@ -1030,14 +1291,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               width: 32.0,
                               height: 32.0,
                               decoration: BoxDecoration(
-                                color: Color(0xFFF0FDF4),
+                                color: Color(0xFFF5EAD7),
                                 shape: BoxShape.circle,
                               ),
                               child: Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: Icon(
                                   Icons.check_circle_outline_rounded,
-                                  color: Color(0xFF16A34A),
+                                  color: Color(0xFFC8A97E),
                                   size: 16.0,
                                 ),
                               ),
@@ -1047,13 +1308,13 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               style: FlutterFlowTheme.of(context)
                                   .titleMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
+                                    font: TextStyle(fontFamily: 'Times New Roman MT',
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF1A1A2E),
+                                    color: Color(0xFF3B2F2F),
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -1067,7 +1328,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                           width: double.infinity,
                           height: 1.0,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF3F4F6),
+                            color: Color(0xFFE9DCC8),
                           ),
                         ),
                         Row(
@@ -1077,14 +1338,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               width: 36.0,
                               height: 36.0,
                               decoration: BoxDecoration(
-                                color: Color(0xFFF0FDF4),
+                                color: Color(0xFFF5EAD7),
                                 shape: BoxShape.circle,
                               ),
                               child: Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: Icon(
                                   Icons.check_rounded,
-                                  color: Color(0xFF16A34A),
+                                  color: Color(0xFFC8A97E),
                                   size: 18.0,
                                 ),
                               ),
@@ -1101,14 +1362,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .titleSmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF1A1A2E),
+                                          color: Color(0xFF3B2F2F),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
@@ -1122,14 +1383,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.normal,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodySmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF6B7280),
+                                          color: Color(0xFF8B6A52),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
@@ -1150,14 +1411,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               width: 36.0,
                               height: 36.0,
                               decoration: BoxDecoration(
-                                color: Color(0xFFF0FDF4),
+                                color: Color(0xFFF5EAD7),
                                 shape: BoxShape.circle,
                               ),
                               child: Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: Icon(
                                   Icons.check_rounded,
-                                  color: Color(0xFF16A34A),
+                                  color: Color(0xFFC8A97E),
                                   size: 18.0,
                                 ),
                               ),
@@ -1174,14 +1435,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .titleSmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF1A1A2E),
+                                          color: Color(0xFF3B2F2F),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
@@ -1195,14 +1456,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.normal,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodySmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF6B7280),
+                                          color: Color(0xFF8B6A52),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
@@ -1223,14 +1484,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               width: 36.0,
                               height: 36.0,
                               decoration: BoxDecoration(
-                                color: Color(0xFFF0FDF4),
+                                color: Color(0xFFF5EAD7),
                                 shape: BoxShape.circle,
                               ),
                               child: Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: Icon(
                                   Icons.check_rounded,
-                                  color: Color(0xFF16A34A),
+                                  color: Color(0xFFC8A97E),
                                   size: 18.0,
                                 ),
                               ),
@@ -1247,14 +1508,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .titleSmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF1A1A2E),
+                                          color: Color(0xFF3B2F2F),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
@@ -1268,14 +1529,14 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.normal,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodySmall
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF6B7280),
+                                          color: Color(0xFF8B6A52),
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
                                           fontStyle:
@@ -1299,7 +1560,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFEDE3D1),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 16.0,
@@ -1325,7 +1586,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               width: 32.0,
                               height: 32.0,
                               decoration: BoxDecoration(
-                                color: Color(0xFFF0F4FF),
+                                color: Color(0xFFE8DDD4),
                                 shape: BoxShape.circle,
                               ),
                               child: Align(
@@ -1342,13 +1603,13 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               style: FlutterFlowTheme.of(context)
                                   .titleMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
+                                    font: TextStyle(fontFamily: 'Times New Roman MT',
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF1A1A2E),
+                                    color: Color(0xFF3B2F2F),
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -1362,7 +1623,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                           width: double.infinity,
                           height: 1.0,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF3F4F6),
+                            color: Color(0xFFE9DCC8),
                           ),
                         ),
                         Wrap(
@@ -1381,8 +1642,8 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                               .entries
                               .map((entry) {
                             final palette = [
-                              const Color(0xFFF0F4FF),
-                              const Color(0xFFF0FDF4),
+                              const Color(0xFFE8DDD4),
+                              const Color(0xFFF5EAD7),
                               const Color(0xFFFFF1F2),
                               const Color(0xFFFFF7ED),
                             ];
@@ -1407,7 +1668,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .labelMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -1451,10 +1712,10 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                         padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                         iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         iconColor: Colors.white,
-                        color: Color(0xFF2F8F46),
+                        color: Color(0xFF5C4033),
                         textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                              fontFamily: 'Inter Tight',
-                              color: Colors.white,
+                              fontFamily: 'Times New Roman MT',
+                              color: Color(0xFFEDE3D1),
                               fontSize: 16.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w600,
@@ -1481,18 +1742,18 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                         height: 56.0,
                         padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                         iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        iconColor: Color(0xFF2F8F46),
+                        iconColor: Color(0xFF5C4033),
                         color: Color(0xFFF7F0EB),
                         textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                              fontFamily: 'Inter Tight',
-                              color: Color(0xFF2F8F46),
+                              fontFamily: 'Times New Roman MT',
+                              color: Color(0xFF5C4033),
                               fontSize: 16.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w600,
                             ),
                         elevation: 0.0,
                         borderSide: BorderSide(
-                          color: Color(0xFF2F8F46),
+                          color: Color(0xFF5C4033),
                           width: 1.5,
                         ),
                         borderRadius: BorderRadius.circular(16.0),
@@ -1515,7 +1776,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
         bottomNavigationBar: Container(
           margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 14.0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFEDE3D1),
             borderRadius: BorderRadius.circular(28.0),
             boxShadow: const [
               BoxShadow(
@@ -1543,7 +1804,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1565,7 +1826,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1587,7 +1848,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1609,7 +1870,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1631,7 +1892,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,

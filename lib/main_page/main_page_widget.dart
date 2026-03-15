@@ -115,6 +115,107 @@ class _MainPageWidgetState extends State<MainPageWidget> {
     return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
   }
 
+  Widget _buildAvatarBadge(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          width: 52.0,
+          height: 52.0,
+          decoration: BoxDecoration(
+            color: Color(0xFFEDE3D1),
+            shape: BoxShape.circle,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(52.0),
+            child: _avatarUrl.isNotEmpty
+                ? (_isDataImageUrl(_avatarUrl)
+                    ? ((_decodeDataImage(_avatarUrl) != null)
+                        ? Image.memory(
+                            _decodeDataImage(_avatarUrl)!,
+                            width: 52.0,
+                            height: 52.0,
+                            fit: BoxFit.cover,
+                          )
+                        : Center(
+                            child: Text(
+                              _initials,
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: TextStyle(
+                                      fontFamily: 'Times New Roman MT',
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: Color(0xFF3B2F2F),
+                                    letterSpacing: 0.0,
+                                  ),
+                            ),
+                          ))
+                    : Image.network(
+                        _avatarUrl,
+                        width: 52.0,
+                        height: 52.0,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Center(
+                          child: Text(
+                            _initials,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: TextStyle(
+                                    fontFamily: 'Times New Roman MT',
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  color: Color(0xFF3B2F2F),
+                                  letterSpacing: 0.0,
+                                ),
+                          ),
+                        ),
+                      ))
+                : Center(
+                    child: Text(
+                      _initials,
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: TextStyle(
+                              fontFamily: 'Times New Roman MT',
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color: Color(0xFF3B2F2F),
+                            letterSpacing: 0.0,
+                          ),
+                    ),
+                  ),
+          ),
+        ),
+        Positioned(
+          top: 0.0,
+          left: 0.0,
+          child: Container(
+            width: 14.0,
+            height: 14.0,
+            decoration: BoxDecoration(
+              color: Color(0xFF92C85C),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Color(0xFFF5F0E6),
+                width: 2.0,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   List<String> _parseIngredients(String value) => value
       .split(',')
       .map((e) => e.trim())
@@ -313,165 +414,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF2F2F5),
-        appBar: AppBar(
-          backgroundColor: Color(0xFFF2F2F5),
-          automaticallyImplyLeading: false,
-          title: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hi',
-                      style: FlutterFlowTheme.of(context).bodySmall.override(
-                            font: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodySmall
-                                  .fontStyle,
-                            ),
-                            color: Color(0xFF8C8F9A),
-                            fontSize: 13.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .bodySmall
-                                .fontStyle,
-                          ),
-                    ),
-                    Text(
-                      _displayName,
-                      style:
-                          FlutterFlowTheme.of(context).headlineMedium.override(
-                                font: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .fontStyle,
-                                ),
-                                color: Color(0xFF1A1A2E),
-                                fontSize: 24.0,
-                                letterSpacing: 0.0,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .fontStyle,
-                              ),
-                    ),
-                  ],
-                ),
-                Stack(
-                  children: [
-                    Container(
-                      width: 44.0,
-                      height: 44.0,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        shape: BoxShape.circle,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(44.0),
-                        child: _avatarUrl.isNotEmpty
-                            ? (_isDataImageUrl(_avatarUrl)
-                                ? ((_decodeDataImage(_avatarUrl) != null)
-                                    ? Image.memory(
-                                        _decodeDataImage(_avatarUrl)!,
-                                        width: 44.0,
-                                        height: 44.0,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Center(
-                                        child: Text(
-                                          _initials,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                font: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                                color: Color(0xFF1F2332),
-                                                letterSpacing: 0.0,
-                                              ),
-                                        ),
-                                      ))
-                                : Image.network(
-                                    _avatarUrl,
-                                    width: 44.0,
-                                    height: 44.0,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => Center(
-                                      child: Text(
-                                        _initials,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              font: GoogleFonts.interTight(
-                                                fontWeight: FontWeight.bold,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
-                                              color: Color(0xFF1F2332),
-                                              letterSpacing: 0.0,
-                                            ),
-                                      ),
-                                    ),
-                                  ))
-                            : Center(
-                                child: Text(
-                                  _initials,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .fontStyle,
-                                        ),
-                                        color: Color(0xFF1F2332),
-                                        letterSpacing: 0.0,
-                                      ),
-                                ),
-                              ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(1.0, -1.0),
-                      child: Container(
-                        width: 14.0,
-                        height: 14.0,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Color(0xFFF2F2F5),
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          actions: [],
-          centerTitle: false,
-          elevation: 0.0,
-        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           top: true,
           child: StreamBuilder<List<ScansRecord>>(
@@ -514,49 +457,58 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                   .toList();
                   _scheduleLabelRepairs(scans);
 
-              return SingleChildScrollView(
-                child: Column(
+              return Container(
+                color: Color(0xFFF5F0E6),
+                child: SingleChildScrollView(
+                    child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
                     padding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 22.0, 20.0, 22.0),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: isBeautyFocus
-                            ? [Color(0xFFD0A98F), Color(0xFFB78466)]
-                            : [Color(0xFF62C476), Color(0xFF3FAF58)],
-                        stops: [0.0, 1.0],
-                        begin: AlignmentDirectional(-1.0, -1.0),
-                        end: AlignmentDirectional(1.0, 1.0),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 28.0,
-                          color: Color(0x2A78604F),
-                          offset: Offset(
-                            0.0,
-                            8.0,
+                      EdgeInsetsDirectional.fromSTEB(20.0, 10.0, 20.0, 22.0),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                            image: AssetImage(
+                              'assets/images/background_image2.png',
+                            ),
                           ),
-                        )
-                      ],
-                      borderRadius: BorderRadius.circular(32.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(18.0),
-                      child: Column(
+                          gradient: LinearGradient(
+                            colors: [Color(0x55F5EBDD), Color(0xC8C5A485)],
+                            stops: [0.0, 1.0],
+                            begin: AlignmentDirectional(-1.0, 0.0),
+                            end: AlignmentDirectional(1.0, 0.0),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 28.0,
+                              color: Color(0x2A78604F),
+                              offset: Offset(
+                                0.0,
+                                8.0,
+                              ),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(32.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(18.0, 26.0, 18.0, 18.0),
+                          child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
+                          Align(
+                            alignment: AlignmentDirectional(1.0, 0.0),
+                            child: SizedBox(
+                              width: 200.0,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -566,14 +518,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w500,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
                                                     .fontStyle,
                                           ),
-                                          color: Color(0x99FFFFFF),
+                                          color: Color(0xFF8B6A52),
                                           fontSize: 13.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
@@ -590,14 +542,15 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .headlineLarge
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: TextStyle(
+                                            fontFamily: 'Times New Roman MT',
                                             fontWeight: FontWeight.bold,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .headlineLarge
                                                     .fontStyle,
                                           ),
-                                          color: Colors.white,
+                                          color: Color(0xFF3B2F2F),
                                           fontSize: 26.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.bold,
@@ -610,72 +563,66 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   ),
                                 ],
                               ),
-                              Container(
-                                width: 48.0,
-                                height: 48.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0x40FFFFFF),
-                                  borderRadius: BorderRadius.circular(14.0),
-                                ),
-                                child: Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Icon(
-                                    Icons.notifications_none,
-                                    color: Colors.white,
-                                    size: 24.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: const Color(0x2AFFFFFF),
-                              borderRadius: BorderRadius.circular(16.0),
-                              border: Border.all(
-                                color: const Color(0x3DFFFFFF),
-                                width: 1.0,
-                              ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      isBeautyFocus
-                                          ? 'Daily routine\nprogress'
-                                          : 'Weekly nutrition\nconsistency',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            font: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w600,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .fontStyle,
-                                            ),
-                                            color: const Color(0xE6FFFFFF),
-                                            letterSpacing: 0.0,
-                                          ),
-                                    ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(1.0, 0.0),
+                            child: SizedBox(
+                              width: 200.0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0x66F7EEE1),
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  border: Border.all(
+                                    color: const Color(0x88E5CDAF),
+                                    width: 1.0,
                                   ),
-                                  SizedBox(
-                                    width: 120.0,
-                                    child: LinearProgressIndicator(
-                                      value: isBeautyFocus ? 0.72 : 0.63,
-                                      minHeight: 8.0,
-                                      backgroundColor: const Color(0x40FFFFFF),
-                                      valueColor:
-                                          const AlwaysStoppedAnimation<Color>(
-                                        Color(0xFFFFFFFF),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          isBeautyFocus
+                                              ? 'Daily routine\nprogress'
+                                              : 'Weekly nutrition\nconsistency',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodySmall
+                                              .override(
+                                                font: TextStyle(
+                                                  fontFamily:
+                                                      'Perandory SemiCondensed',
+                                                  fontWeight: FontWeight.w600,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodySmall
+                                                          .fontStyle,
+                                                ),
+                                                color: const Color(0xFF5C4033),
+                                                letterSpacing: 0.0,
+                                              ),
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.circular(999.0),
-                                    ),
+                                      SizedBox(
+                                        width: 72.0,
+                                        child: LinearProgressIndicator(
+                                          value: isBeautyFocus ? 0.72 : 0.63,
+                                          minHeight: 7.0,
+                                          backgroundColor:
+                                              const Color(0xFFE9DCC8),
+                                          valueColor:
+                                              const AlwaysStoppedAnimation<Color>(
+                                            Color(0xFFC8A97E),
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(999.0),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
@@ -689,13 +636,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               height: 138.0,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [Color(0x55FFFFFF), Color(0x30FFFFFF)],
+                                  colors: [Color(0x66F7EBDD), Color(0x4DD8BEA0)],
                                   stops: [0.0, 1.0],
                                   begin: AlignmentDirectional(-1.0, -1.0),
                                   end: AlignmentDirectional(1.0, 1.0),
                                 ),
                                 border: Border.all(
-                                  color: Color(0x44FFFFFF),
+                                  color: Color(0x66E5CDAF),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(20.0),
@@ -717,11 +664,11 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                           width: 72.0,
                                           height: 72.0,
                                           decoration: BoxDecoration(
-                                            color: Colors.white,
+                                            color: Color(0xFFF1D8BC),
                                             boxShadow: [
                                               BoxShadow(
                                                 blurRadius: 24.0,
-                                                color: Color(0x552FA34A),
+                                                color: Color(0x44B78466),
                                                 offset: Offset(
                                                   0.0,
                                                   6.0,
@@ -735,7 +682,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: Icon(
                                               Icons.qr_code_scanner_rounded,
-                                              color: Color(0xFF45B764),
+                                              color: Color(0xFFF9F2E8),
                                               size: 34.0,
                                             ),
                                           ),
@@ -749,7 +696,9 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
-                                                  font: GoogleFonts.inter(
+                                                  font: TextStyle(
+                                                    fontFamily:
+                                                        'Sloop Script Pro',
                                                     fontWeight:
                                                         FontWeight.w600,
                                                     fontStyle:
@@ -758,8 +707,8 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                             .bodyMedium
                                                             .fontStyle,
                                                   ),
-                                                  color: Color(0xCCFFFFFF),
-                                                  fontSize: 13.0,
+                                                  color: Color(0xFF6C4F3B),
+                                                  fontSize: 14.0,
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
@@ -777,10 +726,22 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               ),
                             ),
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xB3F7EBDD),
+                              borderRadius: BorderRadius.circular(18.0),
+                              border: Border.all(
+                                color: Color(0x66D9B894),
+                                width: 1.0,
+                              ),
+                            ),
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                10.0, 8.0, 10.0, 8.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
                               Expanded(
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
@@ -788,7 +749,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   children: [
                                     Icon(
                                       Icons.fastfood_outlined,
-                                      color: Color(0xAAFFFFFF),
+                                      color: Color(0xFFB97742),
                                       size: 20.0,
                                     ),
                                     Padding(
@@ -799,14 +760,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .bodySmall
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight: FontWeight.w500,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
                                                         .bodySmall
                                                         .fontStyle,
                                               ),
-                                              color: Color(0xAAFFFFFF),
+                                              color: Color(0xFFB97742),
                                               fontSize: 11.0,
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.w500,
@@ -824,7 +785,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 width: 1.0,
                                 height: 32.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0x55FFFFFF),
+                                  color: Color(0x55B97742),
                                 ),
                               ),
                               Expanded(
@@ -834,7 +795,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   children: [
                                     Icon(
                                       Icons.spa_outlined,
-                                      color: Color(0xAAFFFFFF),
+                                      color: Color(0xFFB97742),
                                       size: 20.0,
                                     ),
                                     Padding(
@@ -845,14 +806,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .bodySmall
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight: FontWeight.w500,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
                                                         .bodySmall
                                                         .fontStyle,
                                               ),
-                                              color: Color(0xAAFFFFFF),
+                                              color: Color(0xFFB97742),
                                               fontSize: 11.0,
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.w500,
@@ -870,7 +831,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 width: 1.0,
                                 height: 32.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0x55FFFFFF),
+                                  color: Color(0x55B97742),
                                 ),
                               ),
                               Expanded(
@@ -880,7 +841,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   children: [
                                     Icon(
                                       Icons.face_retouching_natural,
-                                      color: Color(0xAAFFFFFF),
+                                      color: Color(0xFFB97742),
                                       size: 20.0,
                                     ),
                                     Padding(
@@ -891,14 +852,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .bodySmall
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight: FontWeight.w500,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
                                                         .bodySmall
                                                         .fontStyle,
                                               ),
-                                              color: Color(0xAAFFFFFF),
+                                              color: Color(0xFFB97742),
                                               fontSize: 11.0,
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.w500,
@@ -912,11 +873,19 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   ],
                                 ),
                               ),
-                            ],
+                              ],
+                            ),
                           ),
                         ].divide(SizedBox(height: 20.0)),
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        top: -14.0,
+                        right: -6.0,
+                        child: _buildAvatarBadge(context),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -929,13 +898,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                         'Health Overview',
                         style:
                             FlutterFlowTheme.of(context).titleMedium.override(
-                                  font: GoogleFonts.interTight(
+                                  font: TextStyle(
+                                    fontFamily: 'Times New Roman MT',
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .fontStyle,
                                   ),
-                                  color: Color(0xFF1A1A2E),
+                                  color: Color(0xFF3B2F2F),
                                   fontSize: 16.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.bold,
@@ -947,13 +917,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       Text(
                         'This week',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              font: GoogleFonts.inter(
+                              font: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w500,
                                 fontStyle: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .fontStyle,
                               ),
-                              color: Color(0xFF7A9E7A),
+                              color: Color(0xFF8B6A52),
                               fontSize: 13.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w500,
@@ -965,16 +935,18 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                     Expanded(
                       child: Container(
                         width: 100.0,
                         height: 116.0,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color(0xFFEDE3D1),
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 12.0,
@@ -998,14 +970,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 width: 40.0,
                                 height: 40.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFE8F5E9),
+                                  color: Color(0xFFF5EAD7),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Icon(
                                     Icons.favorite_border_rounded,
-                                    color: Color(0xFF2F8F46),
+                                    color: Color(0xFF5C4033),
                                     size: 20.0,
                                   ),
                                 ),
@@ -1018,14 +990,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .headlineSmall
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: TextStyle(fontFamily: 'Times New Roman MT',
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .headlineSmall
                                                   .fontStyle,
                                         ),
-                                        color: Color(0xFF2F8F46),
+                                        color: Color(0xFF5C4033),
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.bold,
@@ -1040,7 +1012,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .override(
-                                      font: GoogleFonts.inter(
+                                      font: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w500,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .bodySmall
@@ -1065,7 +1037,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                         width: 100.0,
                         height: 116.0,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color(0xFFEDE3D1),
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 12.0,
@@ -1109,7 +1081,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .headlineSmall
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: TextStyle(fontFamily: 'Times New Roman MT',
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -1131,7 +1103,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .override(
-                                      font: GoogleFonts.inter(
+                                      font: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w500,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .bodySmall
@@ -1156,7 +1128,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                         width: 100.0,
                         height: 116.0,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color(0xFFEDE3D1),
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 12.0,
@@ -1180,14 +1152,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 width: 40.0,
                                 height: 40.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFFCE4EC),
+                                  color: Color(0xFFF5EAD7),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Icon(
                                     Icons.warning_amber_rounded,
-                                    color: Color(0xFFE91E63),
+                                    color: Color(0xFFC8A97E),
                                     size: 20.0,
                                   ),
                                 ),
@@ -1200,14 +1172,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .headlineSmall
                                       .override(
-                                        font: GoogleFonts.interTight(
+                                        font: TextStyle(fontFamily: 'Times New Roman MT',
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .headlineSmall
                                                   .fontStyle,
                                         ),
-                                        color: Color(0xFFE91E63),
+                                        color: Color(0xFFC8A97E),
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.bold,
@@ -1222,7 +1194,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .override(
-                                      font: GoogleFonts.inter(
+                                      font: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w500,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .bodySmall
@@ -1242,7 +1214,8 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                         ),
                       ),
                     ),
-                  ].divide(SizedBox(width: 12.0)),
+                    ].divide(SizedBox(width: 12.0)),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(24.0, 8.0, 24.0, 0.0),
@@ -1254,13 +1227,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                         'Scanned Products',
                         style:
                             FlutterFlowTheme.of(context).titleMedium.override(
-                                  font: GoogleFonts.interTight(
+                                  font: TextStyle(fontFamily: 'Times New Roman MT',
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .fontStyle,
                                   ),
-                                  color: Color(0xFF1A1A2E),
+                                  color: Color(0xFF3B2F2F),
                                   fontSize: 16.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.bold,
@@ -1272,13 +1245,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       Text(
                         '${visibleScans.length} total',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              font: GoogleFonts.inter(
+                              font: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
                                 fontStyle: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .fontStyle,
                               ),
-                              color: Color(0xFF2F8F46),
+                              color: Color(0xFF5C4033),
                               fontSize: 13.0,
                               letterSpacing: 0.0,
                             ),
@@ -1289,7 +1262,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFEDE3D1),
                     border: Border.all(color: Color(0xFFEFF3F8), width: 1.0),
                     boxShadow: [
                       BoxShadow(
@@ -1322,13 +1295,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               hintText: 'Search by product name',
                               prefixIcon: Icon(
                                 Icons.search_rounded,
-                                color: Color(0xFF57636C),
+                                color: Color(0xFF9E7E6A),
                               ),
                               suffixIcon: _searchQuery.isNotEmpty
                                   ? IconButton(
                                       icon: Icon(
                                         Icons.clear_rounded,
-                                        color: Color(0xFF57636C),
+                                        color: Color(0xFF9E7E6A),
                                       ),
                                       onPressed: () {
                                         _searchController.clear();
@@ -1339,19 +1312,19 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                     )
                                   : null,
                               filled: true,
-                              fillColor: Color(0xFFFFFFFF),
+                              fillColor: Color(0xFFFCF8F2),
                               contentPadding: EdgeInsetsDirectional.fromSTEB(
                                   12.0, 10.0, 12.0, 10.0),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0xFFE2E8F0),
+                                  color: Color(0xFFE5CDAF),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0xFF2F8F46),
+                                  color: Color(0xFF5C4033),
                                   width: 1.2,
                                 ),
                                 borderRadius: BorderRadius.circular(12.0),
@@ -1381,15 +1354,15 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                 final scan = visibleScans[index];
                                 final score = int.tryParse(scan.healthScore.trim()) ?? 0;
                               final scoreColor = score >= 80
-                                  ? Color(0xFF2F8F46)
+                                  ? Color(0xFF5C4033)
                                   : score >= 60
                                       ? Color(0xFFB78466)
-                                      : Color(0xFFE91E63);
+                                      : Color(0xFFC24664);
                               final scoreBg = score >= 80
-                                  ? Color(0xFFE8F5E9)
+                                  ? Color(0xFFF5EAD7)
                                   : score >= 60
                                       ? Color(0xFFF7F0EB)
-                                      : Color(0xFFFCE4EC);
+                                      : Color(0xFFFCECEF);
                               final firstIngredient = scan.ingredients
                                   .split(',')
                                   .map((e) => e.trim())
@@ -1413,7 +1386,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                         fit: BoxFit.cover,
                                       )
                                     : Icon(Icons.image_not_supported_rounded,
-                                        color: Color(0xFF57636C));
+                                        color: Color(0xFF9E7E6A));
                               } else if (scan.productImage.isNotEmpty) {
                                 imageWidget = Image.network(
                                   scan.productImage,
@@ -1422,11 +1395,11 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) =>
                                       Icon(Icons.image_outlined,
-                                          color: Color(0xFF57636C)),
+                                          color: Color(0xFF9E7E6A)),
                                 );
                               } else {
                                 imageWidget = Icon(Icons.inventory_2_rounded,
-                                    color: Color(0xFF57636C));
+                                    color: Color(0xFF9E7E6A));
                               }
 
                               return GestureDetector(
@@ -1438,10 +1411,10 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       12.0, 10.0, 12.0, 10.0),
                                   decoration: BoxDecoration(
-                                    color: Color(0xFFFAFCFF),
+                                    color: Color(0xFFFCF8F2),
                                     borderRadius: BorderRadius.circular(16.0),
                                     border: Border.all(
-                                      color: Color(0xFFE8EEF5),
+                                      color: Color(0xFFE5CDAF),
                                       width: 1.0,
                                     ),
                                   ),
@@ -1486,14 +1459,18 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                                 context)
                                                             .titleSmall
                                                             .override(
-                                                              font: GoogleFonts
-                                                                  .interTight(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                              ),
-                                                              color: Color(
-                                                                  0xFF1F2937),
+                                                          font: TextStyle(
+                                                          fontFamily:
+                                                            'Times New Roman MT',
+                                                          fontWeight:
+                                                            FontWeight
+                                                              .w700,
+                                                          fontStyle:
+                                                            FlutterFlowTheme.of(context)
+                                                              .titleSmall
+                                                              .fontStyle,
+                                                          ),
+                                                          color: Color(0xFF3B2F2F),
                                                               letterSpacing:
                                                                   0.0,
                                                             ),
@@ -1516,14 +1493,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                                   context)
                                                               .bodySmall
                                                               .override(
-                                                                font: GoogleFonts
-                                                                    .inter(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
+                                                            font: GoogleFonts
+                                                              .poppins(
+                                                              fontWeight:
+                                                                FontWeight
+                                                                  .w500,
+                                                            ),
                                                                 color: Color(
-                                                                    0xFF6B7280),
+                                                                    0xFF8B6A52),
                                                                 fontSize: 12.0,
                                                                 letterSpacing:
                                                                     0.0,
@@ -1559,7 +1536,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                                 .override(
                                                                   font:
                                                                       GoogleFonts
-                                                                          .inter(
+                                                                    .poppins(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w600,
@@ -1603,7 +1580,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                         context)
                                                     .bodySmall
                                                     .override(
-                                                      font: GoogleFonts.inter(
+                                                      font: GoogleFonts.poppins(
                                                           fontWeight:
                                                               FontWeight.w800),
                                                       color: scoreColor,
@@ -1619,14 +1596,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                                     0.0, 6.0, 0.0, 0.0),
                                             child: Icon(
                                               Icons.chevron_right_rounded,
-                                              color: Color(0xFF9CA3AF),
+                                              color: Color(0xFF8B6A52),
                                               size: 20.0,
                                             ),
                                           ),
                                           PopupMenuButton<String>(
                                             icon: Icon(
                                               Icons.more_vert_rounded,
-                                              color: Color(0xFF6B7280),
+                                              color: Color(0xFF8B6A52),
                                               size: 18.0,
                                             ),
                                             onSelected: (value) async {
@@ -1672,13 +1649,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                         'Top Insights',
                         style:
                             FlutterFlowTheme.of(context).titleMedium.override(
-                                  font: GoogleFonts.interTight(
+                                  font: TextStyle(fontFamily: 'Times New Roman MT',
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .fontStyle,
                                   ),
-                                  color: Color(0xFF1A1A2E),
+                                  color: Color(0xFF3B2F2F),
                                   fontSize: 16.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.bold,
@@ -1695,7 +1672,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFEDE3D1),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 12.0,
@@ -1724,12 +1701,12 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                     width: 48.0,
                                     height: 48.0,
                                     decoration: BoxDecoration(
-                                      color: Color(0xFFE8F5E9),
+                                      color: Color(0xFFF5EAD7),
                                       borderRadius: BorderRadius.circular(14.0),
                                     ),
                                     child: Icon(
                                       Icons.lightbulb_rounded,
-                                      color: Color(0xFF2F8F46),
+                                      color: Color(0xFF5C4033),
                                       size: 24.0,
                                     ),
                                   ),
@@ -1755,14 +1732,14 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .bodySmall
                                               .override(
-                                                font: GoogleFonts.inter(
+                                                font: GoogleFonts.poppins(
                                                   fontWeight: FontWeight.w500,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(context)
                                                           .bodySmall
                                                           .fontStyle,
                                                 ),
-                                                color: Color(0xFF57636C),
+                                                color: Color(0xFF9E7E6A),
                                                 letterSpacing: 0.0,
                                               ),
                                         ),
@@ -1771,7 +1748,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                                   ),
                                   Icon(
                                     Icons.chevron_right_rounded,
-                                    color: Color(0xFF57636C),
+                                    color: Color(0xFF9E7E6A),
                                     size: 22.0,
                                   ),
                                 ].divide(SizedBox(width: 12.0)),
@@ -1784,14 +1761,15 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                   .addToStart(SizedBox(height: 8.0))
                   .addToEnd(SizedBox(height: 100.0)),
                 ),
-              );
+              ),
+            );
             },
           ),
         ),
         bottomNavigationBar: Container(
           margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 14.0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFEDE3D1),
             borderRadius: BorderRadius.circular(28.0),
             boxShadow: const [
               BoxShadow(
@@ -1825,7 +1803,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       Text(
                         'Home',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFFB78466),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1848,7 +1826,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       Text(
                         'Scan',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1870,7 +1848,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       Text(
                         'Insights',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1892,7 +1870,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       Text(
                         'History',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
@@ -1918,7 +1896,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                       Text(
                         'Profile',
                         style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Poppins',
                               color: const Color(0xFF667085),
                               fontSize: 11.0,
                               letterSpacing: 0.0,
