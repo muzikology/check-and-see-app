@@ -128,6 +128,15 @@ Create group `google_play_credentials`:
 
 1. `GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS` (JSON content)
 
+Create group `banuba_credentials`:
+
+1. `BANUBA_CLIENT_TOKEN` (required)
+2. `BANUBA_AR_CLOUD_TOKEN` (optional)
+
+Compatibility alias (optional):
+
+1. `BANUBA_TOKEN` (used only if `BANUBA_CLIENT_TOKEN` is not set)
+
 ### iOS Signing Setup in Codemagic
 
 1. Connect Apple Developer account in Codemagic.
@@ -167,3 +176,19 @@ flutter run \
 
 If tokens are missing, the app now shows a clear snackbar when opening
 `Try On with AR`.
+
+### Codemagic Variables for Banuba
+
+In Codemagic UI:
+
+1. Go to `Teams -> Environment variables`.
+2. Create (or edit) group `banuba_credentials`.
+3. Add `BANUBA_CLIENT_TOKEN` as a secure variable with your client token value.
+4. Add optional `BANUBA_AR_CLOUD_TOKEN` if you use AR Cloud features.
+5. Attach `banuba_credentials` to both workflows (`ios-app-store`, `android-play-internal`).
+
+The workflows now fail early if no Banuba token is available, and build with:
+
+```bash
+--dart-define=BANUBA_CLIENT_TOKEN=${BANUBA_CLIENT_TOKEN:-$BANUBA_TOKEN}
+```

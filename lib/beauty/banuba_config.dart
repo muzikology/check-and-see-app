@@ -10,9 +10,15 @@ class BanubaConfig {
   static const _clientTokenFallback = '';
   static const _arCloudTokenFallback = '';
 
-  static const clientToken = String.fromEnvironment(
+  static const _clientTokenPrimary = String.fromEnvironment(
     'BANUBA_CLIENT_TOKEN',
-    defaultValue: _clientTokenFallback,
+    defaultValue: '',
+  );
+
+  // Backward-compatible alias for CI environments that used another key.
+  static const _clientTokenAlias = String.fromEnvironment(
+    'BANUBA_TOKEN',
+    defaultValue: '',
   );
 
   static const arCloudToken = String.fromEnvironment(
@@ -20,7 +26,15 @@ class BanubaConfig {
     defaultValue: _arCloudTokenFallback,
   );
 
-  static bool get hasClientToken => clientToken.trim().isNotEmpty;
+  static String get clientToken {
+    final primary = _clientTokenPrimary.trim();
+    if (primary.isNotEmpty) return primary;
+    final alias = _clientTokenAlias.trim();
+    if (alias.isNotEmpty) return alias;
+    return _clientTokenFallback.trim();
+  }
+
+  static bool get hasClientToken => clientToken.isNotEmpty;
   static bool get hasArCloudToken => arCloudToken.trim().isNotEmpty;
   static bool get hasRequiredTokens => hasClientToken && hasArCloudToken;
 }

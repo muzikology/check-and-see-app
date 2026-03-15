@@ -4,12 +4,14 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/beauty/beauty_recommendation_service.dart';
 import '/scan_session.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'history_page_model.dart';
@@ -60,6 +62,8 @@ class HistoryPageWidget extends StatefulWidget {
 
 class _HistoryPageWidgetState extends State<HistoryPageWidget> {
   late HistoryPageModel _model;
+  final BeautyRecommendationService _beautyRecommendationService =
+      BeautyRecommendationService();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -107,6 +111,81 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
     return 'Lower score detected. Review additives and sugar levels.';
   }
 
+  Future<Uint8List?> _loadScanImageBytes(ScansRecord scan) async {
+    final raw = scan.productImage.trim();
+    if (raw.isEmpty) {
+      return null;
+    }
+
+    if (raw.startsWith('data:image/')) {
+      final comma = raw.indexOf(',');
+      if (comma > 0 && comma < raw.length - 1) {
+        try {
+          return base64Decode(raw.substring(comma + 1));
+        } catch (_) {
+          return null;
+        }
+      }
+      return null;
+    }
+
+    try {
+      final uri = Uri.tryParse(raw);
+      if (uri == null) return null;
+      final data = await NetworkAssetBundle(uri).load(raw);
+      return data.buffer.asUint8List();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _deleteScanImage(ScansRecord scan) async {
+    if (scan.productImage.trim().isEmpty) {
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete image?'),
+        content: const Text('The scan entry will stay, but its image will be removed.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    try {
+      await scan.reference.update({'product_image': ''});
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Image removed from history item.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not remove image: $e'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   Future<void> _openScanInAnalysis(ScansRecord scan) async {
     final score = (int.tryParse(scan.healthScore.trim()) ?? 70).clamp(1, 100);
     final analysis = ScanAnalysisResult(
@@ -123,23 +202,25 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
       impactForUser: scan.impactForUser,
     );
 
-    Uint8List? imageBytes;
-    if (scan.productImage.startsWith('data:image/')) {
-      final comma = scan.productImage.indexOf(',');
-      if (comma > 0 && comma < scan.productImage.length - 1) {
-        try {
-          imageBytes = base64Decode(scan.productImage.substring(comma + 1));
-        } catch (_) {
-          imageBytes = null;
-        }
-      }
-    }
+    final imageBytes = await _loadScanImageBytes(scan);
 
     ScanSession.updateAnalysisOnly(
       analysis,
       bytes: imageBytes,
       at: scan.scanDate ?? scan.createdTime,
     );
+
+    if (analysis.productType == ScanProductType.beauty && imageBytes != null) {
+      try {
+        final beautyResult =
+            await _beautyRecommendationService.buildBeautyJourney(imageBytes);
+        ScanSession.setBeautyAnalysis(beautyResult);
+      } catch (_) {
+        ScanSession.setBeautyAnalysis(null);
+      }
+    } else {
+      ScanSession.setBeautyAnalysis(null);
+    }
 
     if (!mounted) {
       return;
@@ -355,7 +436,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                             ),
                             itemBuilder: (context, index) {
                               if (includeCurrentAnalysis && index == 0) {
-                                final analysis = currentAnalysis!;
+                                final analysis = currentAnalysis;
                                 final score = analysis.healthScore;
                                 final scoreBg = score >= 80
                                     ? Color(0xFFF5EAD7)
@@ -559,6 +640,18 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                                         ),
                                       ),
                                     ),
+                                    if (scan.productImage.trim().isNotEmpty)
+                                      IconButton(
+                                        onPressed: () async {
+                                          await _deleteScanImage(scan);
+                                        },
+                                        icon: Icon(
+                                          Icons.delete_outline_rounded,
+                                          color: Color(0xFF8B6A52),
+                                          size: 20.0,
+                                        ),
+                                        tooltip: 'Delete image',
+                                      ),
                                     Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 10.0, vertical: 6.0),
