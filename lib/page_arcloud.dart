@@ -37,8 +37,9 @@ class PageArCloud extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'Run with tokens:\n'
-              'flutter run --dart-define=BANUBA_CLIENT_TOKEN=<token> '
-              '--dart-define=BANUBA_AR_CLOUD_TOKEN=<token>',
+              'flutter run --dart-define=BANUBA_CLIENT_TOKEN="<token>"\n'
+              'Optional: --dart-define=BANUBA_AR_CLOUD_TOKEN="<token>"\n'
+              'PowerShell note: use the token value directly, without a leading $.',
               style: FlutterFlowTheme.of(context).bodySmall.override(
                     fontFamily: 'Poppins',
                     color: const Color(0xFF5C4033),

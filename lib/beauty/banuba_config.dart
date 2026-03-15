@@ -2,7 +2,8 @@
 ///
 /// Preferred: provide tokens via --dart-define so secrets are not committed.
 /// Example:
-/// flutter run --dart-define=BANUBA_CLIENT_TOKEN=... --dart-define=BANUBA_AR_CLOUD_TOKEN=...
+/// flutter run --dart-define=BANUBA_CLIENT_TOKEN="..." --dart-define=BANUBA_AR_CLOUD_TOKEN="..."
+/// PowerShell note: pass the token directly and do not prefix it with '$'.
 class BanubaConfig {
   // Optional fallback for local-only testing if you really want to paste directly.
   // Keep these empty in source control.

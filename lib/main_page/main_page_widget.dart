@@ -474,7 +474,7 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            alignment: AlignmentDirectional(0.18, 0.0),
+                            alignment: AlignmentDirectional(-0.06, 0.0),
                             image: AssetImage(
                               'assets/images/background_image2.png',
                             ),

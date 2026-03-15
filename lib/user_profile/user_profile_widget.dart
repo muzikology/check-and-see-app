@@ -2046,12 +2046,12 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                             ),
                             options: FFButtonOptions(
                               width: double.infinity,
-                              height: 48.0,
-                              color: Color(0xFFE53E3E),
+                              height: 44.0,
+                              color: Color(0xFFF7F0EB),
                               padding: EdgeInsets.all(0.0),
                               iconPadding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 0.0, 8.0, 0.0),
-                              iconColor: Colors.white,
+                              iconColor: Color(0xFF5C4033),
                               elevation: 0.0,
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleSmall
@@ -2062,7 +2062,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                           .titleSmall
                                           .fontStyle,
                                     ),
-                                    color: Colors.white,
+                                    color: Color(0xFF5C4033),
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -2070,10 +2070,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                         .fontStyle,
                                   ),
                               borderSide: BorderSide(
-                                color: Color(0xFFFEB2B2),
+                                color: Color(0xFFD1A98A),
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(14.0),
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
                           ),
                         ].divide(SizedBox(height: 16.0)),

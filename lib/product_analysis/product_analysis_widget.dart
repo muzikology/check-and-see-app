@@ -182,7 +182,7 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '${error.message} Run with --dart-define=BANUBA_CLIENT_TOKEN=... --dart-define=BANUBA_AR_CLOUD_TOKEN=...',
+            '${error.message} Run with --dart-define=BANUBA_CLIENT_TOKEN="<token>" (PowerShell: do not prefix token with a dollar sign).',
           ),
           behavior: SnackBarBehavior.floating,
         ),
