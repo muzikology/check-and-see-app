@@ -6,6 +6,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/beauty/ar_overlay_service.dart';
 import '/beauty/beauty_models.dart';
+import '/beauty/beauty_try_on_widget.dart';
 import '/scan_session.dart';
 import 'dart:convert';
 import 'dart:ui';
@@ -179,12 +180,12 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'AR session ready (${session.provider}) with ${session.overlayKeys.length} overlays. Hook this into SDK launch.',
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BeautyTryOnWidget(
+          analysis: beauty,
+          session: session,
         ),
-        behavior: SnackBarBehavior.floating,
       ),
     );
   }
