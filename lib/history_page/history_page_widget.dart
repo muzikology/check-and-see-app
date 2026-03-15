@@ -436,7 +436,7 @@ class _HistoryPageWidgetState extends State<HistoryPageWidget> {
                             ),
                             itemBuilder: (context, index) {
                               if (includeCurrentAnalysis && index == 0) {
-                                final analysis = currentAnalysis;
+                                final analysis = currentAnalysis!;
                                 final score = analysis.healthScore;
                                 final scoreBg = score >= 80
                                     ? Color(0xFFF5EAD7)
