@@ -9,6 +9,7 @@ import 'auth/firebase_auth/firebase_user_provider.dart';
 import 'auth/firebase_auth/auth_util.dart';
 
 import 'backend/firebase/firebase_config.dart';
+import '/beauty/banuba_config.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/nav/nav.dart';
@@ -24,6 +25,16 @@ void main() async {
   await initFirebase();
 
   await FlutterFlowTheme.initialize();
+
+  // Banuba setup note: pass tokens using --dart-define to avoid storing
+  // secrets in source control.
+  if (!BanubaConfig.hasClientToken) {
+    debugPrint(
+      '[Banuba] Client token missing. Run with '
+      '--dart-define=BANUBA_CLIENT_TOKEN=... to enable AR flow. '
+      'BANUBA_AR_CLOUD_TOKEN is optional.',
+    );
+  }
 
   runApp(MyApp());
 }

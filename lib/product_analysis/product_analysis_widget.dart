@@ -172,9 +172,23 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
       return;
     }
 
-    final session = await _arOverlayProvider.createSession(
-      recommendations: beauty.recommendations,
-    );
+    ArTryOnSession session;
+    try {
+      session = await _arOverlayProvider.createSession(
+        recommendations: beauty.recommendations,
+      );
+    } on StateError catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${error.message} Run with --dart-define=BANUBA_CLIENT_TOKEN=... --dart-define=BANUBA_AR_CLOUD_TOKEN=...',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
 
     if (!mounted) {
       return;

@@ -139,3 +139,31 @@ Create group `google_play_credentials`:
 1. Provide Play service account JSON in `GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS`.
 2. Ensure app exists in Play Console.
 3. Trigger workflow `android-play-internal`.
+
+## Banuba AR Setup (This Project)
+
+This repo does not use Banuba's sample `page_arcloud.dart` structure directly.
+Equivalent setup points are:
+
+1. `lib/main.dart` (startup validation / debug note)
+2. `lib/beauty/banuba_config.dart` (token config)
+3. `lib/page_arcloud.dart` (optional token status page)
+
+Preferred token setup (do not hardcode secrets):
+
+```bash
+flutter pub get
+flutter run \
+	--dart-define=BANUBA_CLIENT_TOKEN=<your_client_token>
+```
+
+Optional (if you also have AR Cloud token):
+
+```bash
+flutter run \
+	--dart-define=BANUBA_CLIENT_TOKEN=<your_client_token> \
+	--dart-define=BANUBA_AR_CLOUD_TOKEN=<your_ar_cloud_token>
+```
+
+If tokens are missing, the app now shows a clear snackbar when opening
+`Try On with AR`.
