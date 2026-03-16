@@ -14,6 +14,7 @@ workflows:
         APP_STORE_APPLE_ID: ""
       groups:
         - app_store_credentials
+        - banuba_credentials
 
     scripts:
       - name: Flutter pub get
@@ -56,6 +57,7 @@ workflows:
         PACKAGE_NAME: com.okuhleit.checkandseeai
       groups:
         - google_play_credentials
+        - banuba_credentials
 
     scripts:
       - name: Flutter pub get

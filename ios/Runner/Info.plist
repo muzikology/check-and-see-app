@@ -54,6 +54,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>We use your camera to capture product labels and profile selfies.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We use your microphone during live AR camera sessions.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We use your photo library to upload product and profile images.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

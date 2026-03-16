@@ -34,5 +34,6 @@ ios/Flutter/flutter_export_environment.sh
 # Sensitive env/config
 .env
 .env.*
+.banuba.local.json
 *.p12
 *.mobileprovision

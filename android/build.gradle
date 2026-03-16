@@ -1,7 +1,12 @@
+ext {
+    bnb_sdk_version = '1.17.+'
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://nexus.banuba.net/repository/maven-releases/' }
     }
 }
 

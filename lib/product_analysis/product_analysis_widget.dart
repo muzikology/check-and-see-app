@@ -5,13 +5,17 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/beauty/ar_overlay_service.dart';
+import '/beauty/banuba_live_try_on_page.dart';
 import '/beauty/beauty_models.dart';
 import '/beauty/beauty_try_on_widget.dart';
 import '/scan_session.dart';
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'dart:ui';
 import '/index.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -194,14 +198,67 @@ class _ProductAnalysisWidgetState extends State<ProductAnalysisWidget> {
       return;
     }
 
+    final isMobileNative = !kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS);
+    final canUseBanubaLive =
+        isMobileNative && session.provider == 'banuba' && await _isPhysicalDevice();
+
+    if (!mounted) {
+      return;
+    }
+
+    if (isMobileNative && session.provider == 'banuba' && !canUseBanubaLive) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Live Banuba AR needs a physical device. Using preview mode on emulator/simulator.',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => BeautyTryOnWidget(
-          analysis: beauty,
-          session: session,
-        ),
+        builder: (_) {
+          if (canUseBanubaLive) {
+            return BanubaLiveTryOnPage(
+              clientToken: session.launchToken,
+              arCloudToken: session.arCloudToken,
+              overlayKeys: session.overlayKeys,
+            );
+          }
+          return BeautyTryOnWidget(
+            analysis: beauty,
+            session: session,
+          );
+        },
       ),
     );
+  }
+
+  Future<bool> _isPhysicalDevice() async {
+    if (kIsWeb) {
+      return false;
+    }
+
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        return androidInfo.isPhysicalDevice;
+      }
+      if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        return iosInfo.isPhysicalDevice;
+      }
+    } catch (_) {
+      // If we cannot determine the device type, allow live AR on mobile.
+      return true;
+    }
+
+    return false;
   }
 
   @override
