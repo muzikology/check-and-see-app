@@ -31,8 +31,15 @@ workflows:
       - name: Build signed IPA for App Store Connect
         script: |
           BANUBA_CLIENT_TOKEN_VALUE="${BANUBA_CLIENT_TOKEN:-$BANUBA_TOKEN}"
+          TOKEN_LENGTH=${#BANUBA_CLIENT_TOKEN_VALUE}
+          echo "Banuba token length: ${TOKEN_LENGTH}"
+          if [ "$TOKEN_LENGTH" -lt 100 ]; then
+            echo "ERROR: Banuba token appears invalid/too short."
+            exit 1
+          fi
           flutter build ipa --export-method app-store \
-            --dart-define=BANUBA_CLIENT_TOKEN="$BANUBA_CLIENT_TOKEN_VALUE"
+            --dart-define=BANUBA_CLIENT_TOKEN="$BANUBA_CLIENT_TOKEN_VALUE" \
+            --dart-define=BANUBA_TOKEN="$BANUBA_CLIENT_TOKEN_VALUE"
 
     artifacts:
       - build/ios/ipa/*.ipa
@@ -74,8 +81,15 @@ workflows:
       - name: Build Android App Bundle
         script: |
           BANUBA_CLIENT_TOKEN_VALUE="${BANUBA_CLIENT_TOKEN:-$BANUBA_TOKEN}"
+          TOKEN_LENGTH=${#BANUBA_CLIENT_TOKEN_VALUE}
+          echo "Banuba token length: ${TOKEN_LENGTH}"
+          if [ "$TOKEN_LENGTH" -lt 100 ]; then
+            echo "ERROR: Banuba token appears invalid/too short."
+            exit 1
+          fi
           flutter build appbundle --release \
-            --dart-define=BANUBA_CLIENT_TOKEN="$BANUBA_CLIENT_TOKEN_VALUE"
+            --dart-define=BANUBA_CLIENT_TOKEN="$BANUBA_CLIENT_TOKEN_VALUE" \
+            --dart-define=BANUBA_TOKEN="$BANUBA_CLIENT_TOKEN_VALUE"
 
     artifacts:
       - build/app/outputs/bundle/release/app-release.aab
